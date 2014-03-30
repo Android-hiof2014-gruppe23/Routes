@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/list"
+        android:orderInCategory="1"
+        android:showAsAction="always"
+        android:onClick="showList"
+        android:title="@string/list"/>
+
+</menu>
