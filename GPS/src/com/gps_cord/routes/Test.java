@@ -1,4 +1,4 @@
-package com.example.gps1;
+package com.gps_cord.routes;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -7,7 +7,8 @@ import android.database.Cursor;
 import android.view.Menu;
 import android.widget.Toast;
 
-import com.example.gps1.database.ActivitiesDataSource;
+import com.gps_cord.routes.R;
+import com.gps_cord.routes.database.ActivitiesDataSource;
 
 public class Test extends Activity {
 	

@@ -1,12 +1,11 @@
-package com.example.gps1.database;
+package com.gps_cord.routes.database;
 
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-import com.example.gps1.MyActivity;
+import com.gps_cord.routes.MyActivity;
 
 import android.content.ContentValues;
 import android.content.Context;

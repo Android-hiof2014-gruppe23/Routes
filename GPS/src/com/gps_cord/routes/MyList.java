@@ -1,12 +1,14 @@
-package com.example.gps1;
+package com.gps_cord.routes;
 
 import java.util.List;
+
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 
-import com.example.gps1.database.ActivitiesDataSource;
+import com.gps_cord.routes.R;
+import com.gps_cord.routes.database.ActivitiesDataSource;
 
 
 public class MyList extends ListActivity {

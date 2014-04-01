@@ -1,4 +1,6 @@
-package com.example.gps1;
+package com.gps_cord.routes;
+
+import com.gps_cord.routes.R;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

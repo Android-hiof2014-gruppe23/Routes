@@ -1,6 +1,7 @@
-package com.example.gps1;
+package com.gps_cord.routes;
 
-import com.example.gps1.database.ActivitiesDataSource;
+import com.gps_cord.routes.R;
+import com.gps_cord.routes.database.ActivitiesDataSource;
 
 import android.app.Notification;
 import android.app.PendingIntent;

@@ -1,4 +1,4 @@
-package com.example.gps1;
+package com.gps_cord.routes;
 
 import android.database.Cursor;
 

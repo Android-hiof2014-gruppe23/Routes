@@ -1,4 +1,4 @@
-package com.example.gps1.database;
+package com.gps_cord.routes.database;
 
 import android.database.sqlite.SQLiteDatabase;
 
