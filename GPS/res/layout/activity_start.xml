@@ -7,26 +7,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".StartActivity" >
-	
-    <RadioGroup
-        android:id="@+id/radioActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-    <RadioButton
-        android:id="@+id/radioButtonGo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:text="@string/go" />
-
-    <RadioButton
-        android:id="@+id/radioButtonDrive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/radioButtonGo"
-        android:text="@string/drive" />
-    </RadioGroup>
 
     <TextView
         android:id="@+id/textViewTitle"
@@ -52,7 +32,6 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/radioActivity"
         android:layout_below="@+id/textViewTitle"
         android:layout_marginTop="40dp"
         android:text="@string/chooseActivity"
@@ -67,5 +46,13 @@
         android:layout_marginBottom="28dp"
         android:onClick="runTest"
         android:text="Button" />
+
+    <Spinner
+        android:id="@+id/layers_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_below="@+id/textView2"
+        android:layout_marginTop="15dp" />
 
 </RelativeLayout>

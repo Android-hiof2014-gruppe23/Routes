@@ -35,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
 		
 		TextView title = (TextView) findViewById(R.id.textViewTitle);
 		title.setText(activityTitle);
+		setTitle(activityTitle);
 		
 		Log.d(tag, "Inne i onCreate()");
 		registerReceiver(uiUpdated,new IntentFilter("LOCATION_UPDATED"));

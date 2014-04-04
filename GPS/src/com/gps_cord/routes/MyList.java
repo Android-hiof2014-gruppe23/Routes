@@ -22,7 +22,6 @@ public class MyList extends ListActivity {
 
 	}
 	
-
 	public void getEntireList()	{
 		datasource = new ActivitiesDataSource(this);
 		datasource.open();
@@ -33,14 +32,5 @@ public class MyList extends ListActivity {
 	    ArrayAdapter<MyActivity> adapter = new ArrayAdapter<MyActivity>(this, android.R.layout.simple_list_item_1, values);
 	    setListAdapter(adapter);
 	}
-	
-	
-/*
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.list, menu);
-		return true;
-	}*/
 
 }
