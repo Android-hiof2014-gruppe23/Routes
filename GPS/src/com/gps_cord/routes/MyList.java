@@ -4,10 +4,8 @@ import java.util.List;
 
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.widget.ArrayAdapter;
 
-import com.gps_cord.routes.R;
 import com.gps_cord.routes.database.ActivitiesDataSource;
 
 

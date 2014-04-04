@@ -1,16 +1,13 @@
 package com.gps_cord.routes;
 
 import android.os.Bundle;
-import android.app.Activity;
-import android.content.Context;
-import android.database.Cursor;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.widget.Toast;
 
-import com.gps_cord.routes.R;
 import com.gps_cord.routes.database.ActivitiesDataSource;
 
-public class Test extends Activity {
+public class Test extends ActionBarActivity {
 	
 	private ActivitiesDataSource datasource;
 	

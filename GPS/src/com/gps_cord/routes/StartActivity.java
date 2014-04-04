@@ -1,11 +1,11 @@
 package com.gps_cord.routes;
 
 
-import com.gps_cord.routes.R;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +14,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class StartActivity extends Activity {
+public class StartActivity extends ActionBarActivity {
 	String tag = "logg";
 	
 	@Override

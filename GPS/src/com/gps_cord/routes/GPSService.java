@@ -1,8 +1,6 @@
 package com.gps_cord.routes;
 
-import com.gps_cord.routes.R;
-import com.gps_cord.routes.database.ActivitiesDataSource;
-
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -11,11 +9,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+import com.gps_cord.routes.database.ActivitiesDataSource;
 
 
 public class GPSService extends Service {
@@ -88,6 +87,7 @@ public class GPSService extends Service {
 		return START_NOT_STICKY;
 	}
 	
+	@SuppressLint("NewApi")
 	private void startInForeground()
 	{
 		// Set basic notification information
@@ -96,15 +96,22 @@ public class GPSService extends Service {
 		long notificationTimeStamp = System.currentTimeMillis();
 		
 		// Describe what to do if the user clicks on the notification in the status bar
-		String notificationTitleText = "My Service";
-        String notificationBodyText = "Does non-UI processing";
+		String notificationTitleText = "Routes";
+        String notificationBodyText = "Getting data from GPS";
         Intent notificationActivityIntent = new Intent(this, MainActivity.class);
         notificationActivityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent startMyActivityPendingIntent = PendingIntent.getActivity(this, 0, notificationActivityIntent, 0);
 		
         Notification foregroundNotification = null;
-        
-		NotificationCompat.Builder notificationbuilder = new NotificationCompat.Builder(this)
+        final int sdkVersion = Build.VERSION.SDK_INT;
+		if (sdkVersion < Build.VERSION_CODES.HONEYCOMB)
+		{
+			foregroundNotification = new Notification(notificationIcon, notificationTickerText, notificationTimeStamp);
+			foregroundNotification.setLatestEventInfo(this, notificationTitleText, notificationBodyText, startMyActivityPendingIntent);
+		}
+		else
+		{
+		Notification.Builder notificationbuilder = new Notification.Builder(this)
 														.setSmallIcon(notificationIcon)
 														.setTicker(notificationTickerText)
 													    .setWhen(notificationTimeStamp);
@@ -112,7 +119,7 @@ public class GPSService extends Service {
 			foregroundNotification = notificationbuilder.setContentTitle(notificationTitleText)
 											.setContentText(notificationBodyText)
 											.setContentIntent(startMyActivityPendingIntent).build();
-		
+		}
         // ID to use w/ Notification Manager for _foregroundNotification
         // Set the service to foreground status and provide notification info
         startForeground(_notificationId, foregroundNotification);
