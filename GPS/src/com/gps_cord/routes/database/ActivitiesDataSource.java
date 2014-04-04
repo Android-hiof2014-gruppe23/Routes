@@ -2,6 +2,7 @@ package com.gps_cord.routes.database;
 
 
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,12 @@ public class ActivitiesDataSource {
 	private String[] allActivityColumns = { Activities.COLUMN_ID,
 			Activities.COLUMN_ACTIVITY_TYPE,
 			Activities.COLUMN_ACTIVITY_DISTANCE,
+			Activities.COLUMN_ACTIVITY_TIME_START,
+			Activities.COLUMN_ACTIVITY_TIME_STOP,
+			Activities.COLUMN_AVG_SPEED,
+			Activities.COLUMN_MAX_SPEED,
+			Activities.COLUMN_MAX_ALTITUDE,
+			Activities.COLUMN_MIN_ALTITUDE
 			};
 	
 	public ActivitiesDataSource(Context context)	{
@@ -34,18 +41,18 @@ public class ActivitiesDataSource {
 		dbHelper.close();
 	}
 	
-	public long createActivity(String type, float distance) {
+	public long createActivity(String type, float distance, long time_start, long time_stop, float avg_speed, 
+		float max_speed, float max_altitude, float min_altitude) {
 		ContentValues values = new ContentValues();
 		
 		values.put(Activities.COLUMN_ACTIVITY_TYPE, type);
 		values.put(Activities.COLUMN_ACTIVITY_DISTANCE, distance);
-		
-		/*
-		values.put(A.COLUMN_TITLE, title);
-		values.put(ShowTable.COLUMN_YEAR, year);
-		values.put(ShowTable.COLUMN_IMDB_ID, imdbId);
-		*/
-		
+		values.put(Activities.COLUMN_ACTIVITY_TIME_START, time_start);
+		values.put(Activities.COLUMN_ACTIVITY_TIME_STOP, time_stop);
+		values.put(Activities.COLUMN_AVG_SPEED, avg_speed);
+		values.put(Activities.COLUMN_MAX_SPEED, max_speed);
+		values.put(Activities.COLUMN_MAX_ALTITUDE, max_altitude);
+		values.put(Activities.COLUMN_MIN_ALTITUDE, min_altitude);
 		
 		long insertId = database.insert(Activities.TABLE_ACTIVITIES, null, values);
 		
@@ -100,6 +107,13 @@ public class ActivitiesDataSource {
 	    myact.set_id(cursor.getLong(0));
 	    myact.setType(cursor.getString(1));
 	    myact.setDistance(cursor.getFloat(2));
+	    myact.setTime_start(cursor.getInt(3));
+	    myact.setTime_stop(cursor.getInt(4));
+	    myact.setAvgSpeed(cursor.getFloat(5));
+	    myact.setMaxSpeed(cursor.getFloat(6));
+	    myact.setMaxAltitude(cursor.getFloat(7));
+	    myact.setMinAltitude(cursor.getFloat(8));
+	    
 	    return myact;
 	  }
 	

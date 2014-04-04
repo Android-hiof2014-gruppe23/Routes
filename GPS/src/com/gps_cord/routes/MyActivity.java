@@ -1,24 +1,16 @@
 package com.gps_cord.routes;
 
-import android.database.Cursor;
 
 public class MyActivity {
 	private long _id;
 	private String type;
 	private float distance;
-	
-	/*
-	public MyActivity(Cursor cursor)	{
-		_id = cursor.getLong(0);
-		type = cursor.getString(1);
-		distance = cursor.getFloat(2);
-	}
-	
-	public MyActivity(long _id, String type, float distance)	{
-		this._id = _id;
-		this.type = type;
-		this.distance = distance;
-	}*/
+	private long time_start;
+	private long time_stop;
+	private float avgSpeed;
+	private float maxSpeed;
+	private float maxAltitude;
+	private float minAltitude;
 	
 	public long get_id()	{
 		return _id;
@@ -31,6 +23,7 @@ public class MyActivity {
 	public float getDistance()	{
 		return distance;
 	}
+	
 	
 	public void set_id(long _id)	{
 		this._id = _id;
@@ -46,6 +39,54 @@ public class MyActivity {
 	
 	@Override
 	public String toString() {
-		return type + " - " + distance;
+		return type + " - " + distance + " - " + maxAltitude +" - " + minAltitude;
+	}
+
+	public float getAvgSpeed() {
+		return avgSpeed;
+	}
+
+	public void setAvgSpeed(float avgSpeed) {
+		this.avgSpeed = avgSpeed;
+	}
+
+	public float getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public void setMaxSpeed(float maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	public float getMaxAltitude() {
+		return maxAltitude;
+	}
+
+	public void setMaxAltitude(float maxAltitude) {
+		this.maxAltitude = maxAltitude;
+	}
+
+	public float getMinAltitude() {
+		return minAltitude;
+	}
+
+	public void setMinAltitude(float minAltitude) {
+		this.minAltitude = minAltitude;
+	}
+
+	public long getTime_start() {
+		return time_start;
+	}
+
+	public void setTime_start(int time_start) {
+		this.time_start = time_start;
+	}
+
+	public long getTime_stop() {
+		return time_stop;
+	}
+
+	public void setTime_stop(int time_stop) {
+		this.time_stop = time_stop;
 	}
 }

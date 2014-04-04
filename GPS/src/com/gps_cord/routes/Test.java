@@ -48,7 +48,8 @@ public class Test extends ActionBarActivity {
 
 	
 	public long addToTable(String type, float distance)	{
-		return datasource.createActivity(type, distance);
+		//return datasource.createActivity(type, distance, null,null,null,null,null,null,null);
+		return 0;
 	}
 	
 	public String getTypeFromTable(long _id)	{

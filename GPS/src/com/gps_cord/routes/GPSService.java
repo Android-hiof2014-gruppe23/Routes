@@ -1,5 +1,7 @@
 package com.gps_cord.routes;
 
+import java.util.Date;
+
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.gps_cord.routes.database.ActivitiesDataSource;
 
 
@@ -29,6 +32,11 @@ public class GPSService extends Service {
 	public Location prevLocation;
 	public int countLocations = 0;
 	public float distanceSumInMeters = 0;
+	private Date time_start = null;
+	private Date time_stop = null;
+	private float max_speed = 0;
+	private float max_altitude = 0;
+	private float min_altitude = Float.POSITIVE_INFINITY;
 	
 	
 	public String activityType;
@@ -64,14 +72,33 @@ public class GPSService extends Service {
 		datasource = new ActivitiesDataSource(this);
 		datasource.open();
 		
-		datasource.createActivity(activityType, distanceSumInMeters);
+		time_stop = new Date();
+		datasource.createActivity(activityType, distanceSumInMeters, time_start.getTime(), time_stop.getTime(), calcAvgSpeed(), max_speed, max_altitude, min_altitude);
 		Toast toast = Toast.makeText(this, activityType+" "+distanceSumInMeters, Toast.LENGTH_SHORT);
 		toast.show();
 		
 		datasource.close();
 	}
 	
-
+	private float calcAvgSpeed()	{
+		float time_diff = (float)(time_stop.getTime() - time_start.getTime())/1000;
+		return distanceSumInMeters/time_diff;
+	}
+	
+	public void calcMaxSpeed(double curSpeed)	{
+		if(max_speed < curSpeed)
+			max_speed = (float)curSpeed; 
+	}
+	
+	public void calcMaxAltitude(double curAlt)	{
+		if(max_altitude < curAlt)
+			max_altitude = (float)curAlt; 
+	}
+	
+	public void calcMinAltitude(double curAlt)	{
+		if(min_altitude > curAlt)
+			min_altitude = (float)curAlt; 
+	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
@@ -83,6 +110,8 @@ public class GPSService extends Service {
 		
 		Bundle extra = intent.getExtras();
 		activityType = extra.getString("activityType");
+		
+		time_start = new Date();
 		
 		return START_NOT_STICKY;
 	}
@@ -142,10 +171,16 @@ public class GPSService extends Service {
             String s_longitude = "Lng: " +Double.toString(loc.getLongitude());
             Log.i(gps_data,s_longitude);
             
-            String s_altitude = "Alt: "+Double.toString(loc.getAltitude());
+            double altitude = loc.getAltitude();
+            String s_altitude = "Alt: "+Double.toString(altitude);
             Log.i(gps_data,s_longitude);
+            calcMaxAltitude(altitude);
+            calcMinAltitude(altitude);
             
-            double km = 3.6*loc.getSpeed();
+            double speed = loc.getSpeed();
+            calcMaxSpeed(speed);
+            
+            double km = 3.6*speed;
             String s_speed = "Speed: "+Double.toString(km)+" km/h";
             Log.i(gps_data,s_speed);
             
