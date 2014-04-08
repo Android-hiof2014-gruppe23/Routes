@@ -1,7 +1,7 @@
 package com.gps_cord.routes;
 
 
-public class MyActivity {
+public class GPSActivity {
 	private long _id;
 	private String type;
 	private float distance;

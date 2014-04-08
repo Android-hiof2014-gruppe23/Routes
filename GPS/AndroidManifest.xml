@@ -7,7 +7,8 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -53,8 +54,12 @@
             android:label="@string/title_activity_test" >
         </activity>
         <activity
-            android:name="com.gps_cord.routes.MyList"
+            android:name="com.gps_cord.routes.ListOfActivities"
             android:label="@string/title_activity_list" >
+        </activity>
+        <activity
+            android:name="com.gps_cord.routes.DataOfActivity"
+            android:label="@string/title_activity_data_of" >
         </activity>
     </application>
 

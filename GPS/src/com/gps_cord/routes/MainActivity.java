@@ -28,7 +28,7 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_gps);
 		
 		Bundle extra = getIntent().getExtras();
 		activityTitle = extra.getString("radioButton");
@@ -69,7 +69,7 @@ public class MainActivity extends ActionBarActivity {
 			runServiceIntent = null;
 		}
 		finish();
-		Intent intent = new Intent(this, MyList.class);
+		Intent intent = new Intent(this, ListOfActivities.class);
 		startActivity(intent);
 		
 	}
@@ -141,7 +141,7 @@ public class MainActivity extends ActionBarActivity {
             TextView t3 = (TextView) findViewById(R.id.textView_Altitude);
             t3.setText( intent.getExtras().getString("altitude") );
             
-            TextView t4 = (TextView) findViewById(R.id.textView_Speed);
+            TextView t4 = (TextView) findViewById(R.id.textView_AvgSpeed);
             t4.setText( intent.getExtras().getString("speed") );
             
             TextView t5 = (TextView) findViewById(R.id.textViewDistance);

@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import com.gps_cord.routes.database.ActivitiesDataSource;
 
 
-public class MyList extends ListActivity {
+public class ListOfActivities extends ListActivity {
 	
 	private ActivitiesDataSource datasource;
 	
@@ -26,10 +26,10 @@ public class MyList extends ListActivity {
 		datasource = new ActivitiesDataSource(this);
 		datasource.open();
 		
-		List<MyActivity> values = datasource.getAllShows();
+		List<GPSActivity> values = datasource.getAllShows();
 		//List<MyActivity> values = datasource.getAllShows();
 
-	    ArrayAdapter<MyActivity> adapter = new ArrayAdapter<MyActivity>(this, android.R.layout.simple_list_item_1, values);
+	    ArrayAdapter<GPSActivity> adapter = new ArrayAdapter<GPSActivity>(this, android.R.layout.simple_list_item_1, values);
 	    setListAdapter(adapter);
 	}
 

@@ -48,17 +48,17 @@ public class Test extends ActionBarActivity {
 
 	
 	public long addToTable(String type, float distance)	{
-		//return datasource.createActivity(type, distance, null,null,null,null,null,null,null);
-		return 0;
+		return datasource.createActivity(type, distance, (long)-1,(long)-1,(float)-1,(float)-1,(float)-1,(float)-1);
+		
 	}
 	
 	public String getTypeFromTable(long _id)	{
-		MyActivity myact = datasource.getActivity(_id);
+		GPSActivity myact = datasource.getActivity(_id);
 		return myact.getType();
 	}
 	
 	public float getDistanceFromTable(long _id)	{
-		MyActivity myact = datasource.getActivity(_id);
+		GPSActivity myact = datasource.getActivity(_id);
 		return myact.getDistance();
 	}
 	

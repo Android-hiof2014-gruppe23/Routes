@@ -27,7 +27,7 @@
         android:text="Lng" />
 
     <TextView
-        android:id="@+id/textView_Speed"
+        android:id="@+id/textView_AvgSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView_Altitude"
@@ -48,8 +48,8 @@
         android:id="@+id/textViewDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_Speed"
-        android:layout_below="@+id/textView_Speed"
+        android:layout_alignLeft="@+id/textView_AvgSpeed"
+        android:layout_below="@+id/textView_AvgSpeed"
         android:layout_marginTop="36dp"
         android:text="Distance" />
 

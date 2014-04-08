@@ -61,7 +61,7 @@ public class StartActivity extends ActionBarActivity implements OnItemSelectedLi
 	}
 	
 	public void showList(MenuItem menuitem) 	{
-		Intent listIntent = new Intent(this, MyList.class);
+		Intent listIntent = new Intent(this, ListOfActivities.class);
 		startActivity(listIntent);
 	}
 	

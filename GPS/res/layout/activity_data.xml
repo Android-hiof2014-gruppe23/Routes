@@ -1,0 +1,66 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.gps_cord.routes.DataOfActivity">
+
+    <TextView
+        android:id="@+id/textView_AvgSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView_Latitude"
+        android:layout_below="@+id/textView_Latitude"
+        android:layout_marginTop="30dp"
+        android:text="Speed" />
+
+    <Button
+        android:id="@+id/button_stop_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="42dp"
+        android:onClick="stopService"
+        android:text="Stop Service" />
+
+    <TextView
+        android:id="@+id/textView_MaxSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView_AvgSpeed"
+        android:layout_below="@+id/textView_AvgSpeed"
+        android:layout_marginTop="40dp"
+        android:text="Speed" />
+
+    <TextView
+        android:id="@+id/textViewDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView_MaxSpeed"
+        android:layout_below="@+id/textView_MaxSpeed"
+        android:layout_marginTop="29dp"
+        android:text="Distance" />
+
+    <TextView
+        android:id="@+id/textView_MaxAltitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewDistance"
+        android:layout_below="@+id/textViewDistance"
+        android:layout_marginTop="38dp"
+        android:text="Max Altitude" />
+
+    <TextView
+        android:id="@+id/textView_MinAltitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView_MaxAltitude"
+        android:layout_below="@+id/textView_MaxAltitude"
+        android:layout_marginTop="38dp"
+        android:text="Min Altitude" />
+
+</RelativeLayout>

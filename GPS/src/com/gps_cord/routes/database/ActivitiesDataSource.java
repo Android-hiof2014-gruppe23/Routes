@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gps_cord.routes.MyActivity;
+import com.gps_cord.routes.GPSActivity;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -60,12 +60,12 @@ public class ActivitiesDataSource {
 	}
 	
 	
-	public MyActivity getActivity(long _id)	{
+	public GPSActivity getActivity(long _id)	{
 		Cursor cursor = database.query(Activities.TABLE_ACTIVITIES,
 		        allActivityColumns, Activities.COLUMN_ID + " = " + _id, null,
 		        null, null, null);
 		    cursor.moveToFirst();
-		    MyActivity newActivity = cursorToMyActivity(cursor);
+		    GPSActivity newActivity = cursorToMyActivity(cursor);
 		    cursor.close();
 		    return newActivity;
 	}
@@ -82,8 +82,8 @@ public class ActivitiesDataSource {
 		return distance;
 	}
 	
-	public List<MyActivity> getAllShows() {
-		List<MyActivity> activities = new ArrayList<MyActivity>();
+	public List<GPSActivity> getAllShows() {
+		List<GPSActivity> activities = new ArrayList<GPSActivity>();
 		
 		Cursor cursor = database.query(Activities.TABLE_ACTIVITIES,
 										allActivityColumns, 
@@ -91,7 +91,7 @@ public class ActivitiesDataSource {
 	
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			MyActivity myact = cursorToMyActivity(cursor);
+			GPSActivity myact = cursorToMyActivity(cursor);
 			activities.add(myact);
 			cursor.moveToNext();
 		}
@@ -102,8 +102,8 @@ public class ActivitiesDataSource {
 	}
 	
 	
-	private MyActivity cursorToMyActivity(Cursor cursor) {
-	    MyActivity myact = new MyActivity();
+	private GPSActivity cursorToMyActivity(Cursor cursor) {
+	    GPSActivity myact = new GPSActivity();
 	    myact.set_id(cursor.getLong(0));
 	    myact.setType(cursor.getString(1));
 	    myact.setDistance(cursor.getFloat(2));
