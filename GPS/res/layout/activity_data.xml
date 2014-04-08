@@ -6,61 +6,70 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.gps_cord.routes.DataOfActivity">
+    tools:context="com.gps_cord.routes.DataOfActivity" >
 
     <TextView
         android:id="@+id/textView_AvgSpeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_Latitude"
-        android:layout_below="@+id/textView_Latitude"
-        android:layout_marginTop="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="86dp"
         android:text="Speed" />
-
-    <Button
-        android:id="@+id/button_stop_service"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="42dp"
-        android:onClick="stopService"
-        android:text="Stop Service" />
-
-    <TextView
-        android:id="@+id/textView_MaxSpeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_AvgSpeed"
-        android:layout_below="@+id/textView_AvgSpeed"
-        android:layout_marginTop="40dp"
-        android:text="Speed" />
-
-    <TextView
-        android:id="@+id/textViewDistance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_MaxSpeed"
-        android:layout_below="@+id/textView_MaxSpeed"
-        android:layout_marginTop="29dp"
-        android:text="Distance" />
-
-    <TextView
-        android:id="@+id/textView_MaxAltitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewDistance"
-        android:layout_below="@+id/textViewDistance"
-        android:layout_marginTop="38dp"
-        android:text="Max Altitude" />
 
     <TextView
         android:id="@+id/textView_MinAltitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_MaxAltitude"
-        android:layout_below="@+id/textView_MaxAltitude"
-        android:layout_marginTop="38dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_AvgSpeed"
+        android:layout_marginLeft="14dp"
         android:text="Min Altitude" />
+
+    <TextView
+        android:id="@+id/textView_MaxAltitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_MinAltitude"
+        android:layout_marginLeft="14dp"
+        android:text="Max Altitude" />
+
+    <TextView
+        android:id="@+id/textView_Distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_MaxAltitude"
+        android:layout_marginLeft="14dp"
+        android:text="Distance" />
+
+    <TextView
+        android:id="@+id/textView_MaxSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_Distance"
+        android:layout_marginLeft="14dp"
+        android:text="Speed" />
+
+    <TextView
+        android:id="@+id/textView_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView_MaxSpeed"
+        android:layout_below="@+id/textView_MaxSpeed"
+        android:layout_marginTop="14dp"
+        android:text="Time elapsed" />
+
+    <TextView
+        android:id="@+id/textView_Date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView_AvgSpeed"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="40dp"
+        android:text="Date" />
 
 </RelativeLayout>

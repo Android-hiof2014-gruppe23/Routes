@@ -1,92 +1,183 @@
 package com.gps_cord.routes;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.os.SystemClock;
+import android.os.Vibrator;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Chronometer;
+import android.widget.TextView;
 
-public class GPSActivity {
-	private long _id;
-	private String type;
-	private float distance;
-	private long time_start;
-	private long time_stop;
-	private float avgSpeed;
-	private float maxSpeed;
-	private float maxAltitude;
-	private float minAltitude;
+public class GPSActivity extends ActionBarActivity {
+
+	private String tag = "Livssyklus";
+	static Intent runServiceIntent;
+	public String activityTitle;
 	
-	public long get_id()	{
-		return _id;
-	}
+	float vibJump = 1000;
+	float vibDistance = 1000;
 	
-	public String getType()	{
-		return type;
-	}
+	Chronometer chrono;
 	
-	public float getDistance()	{
-		return distance;
-	}
-	
-	
-	public void set_id(long _id)	{
-		this._id = _id;
-	}
-	
-	public void setType(String type)	{
-		this.type = type;
-	}
-	
-	public void setDistance(float distance)	{
-		this.distance = distance;
-	}
 	
 	@Override
-	public String toString() {
-		return type + " - " + distance + " - " + maxAltitude +" - " + minAltitude;
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_gps);
+		
+		
+		chrono = (Chronometer) findViewById(R.id.chronometer1);
+		
+		
+		
+		chrono.start();
+		Bundle extra = getIntent().getExtras();
+		activityTitle = extra.getString("radioButton");
+		
+		//TextView title = (TextView) findViewById(R.id.textViewTitle);
+		//title.setText(activityTitle);
+		setTitle(activityTitle);
+		
+		Log.d(tag, "Inne i onCreate()");
+		registerReceiver(uiUpdated,new IntentFilter("LOCATION_UPDATED"));
+		
+		if(runServiceIntent == null)	{
+			runServiceIntent = new Intent("com.example.gps1.action.LOG_POS");
+			runServiceIntent.putExtra("activityType", activityTitle);
+			startService(runServiceIntent);
+		}
+		
+		
+		
+		
+		
+	}
+	
+	public void startService(View v) {
+		
+		Log.d(tag, "Start Service knapp trykket");
+		if(runServiceIntent == null)	{
+			runServiceIntent = new Intent("com.example.gps1.action.LOG_POS");
+			
+			
+			startService(runServiceIntent);
+		}
+	}
+	
+	public void stopService(View v) {
+		
+		Log.d(tag, "Stop Service knapp trykket");
+		
+		if(runServiceIntent != null)	{
+			stopService(runServiceIntent);
+			//unregisterReceiver(uiUpdated);
+			runServiceIntent = null;
+		}
+		finish();
+		Intent intent = new Intent(this, ListOfActivities.class);
+		startActivity(intent);
+		
+	}
+	
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		Log.d(tag, "Inne i onStart()");
 	}
 
-	public float getAvgSpeed() {
-		return avgSpeed;
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		Log.d(tag, "Inne i onResume()");
 	}
 
-	public void setAvgSpeed(float avgSpeed) {
-		this.avgSpeed = avgSpeed;
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+		Log.d(tag, "Inne i onPause()");
 	}
 
-	public float getMaxSpeed() {
-		return maxSpeed;
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		Log.d(tag, "Inne i onStop()");
 	}
 
-	public void setMaxSpeed(float maxSpeed) {
-		this.maxSpeed = maxSpeed;
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		chrono.stop();
+		Log.d(tag, "Inne i onDestroy()");
+		unregisterReceiver(uiUpdated);
 	}
+	
 
-	public float getMaxAltitude() {
-		return maxAltitude;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.list, menu);
+        return true;
+    }
+    public void showList(MenuItem menuitem) 	{
+		Intent listIntent = new Intent(this, ListOfActivities.class);
+		startActivity(listIntent);
 	}
+    
+    public void vibrateAfterDistance(float distance)	{
+    	if(distance>vibDistance)	{
+    		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+    		v.vibrate(1000);
+    		Log.i(tag,"Vibrasjon etter "+distance);
+    		vibDistance+=vibJump;
+    	}
+    }
+    
+    BroadcastReceiver uiUpdated = new BroadcastReceiver()	{
 
-	public void setMaxAltitude(float maxAltitude) {
-		this.maxAltitude = maxAltitude;
-	}
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			TextView t1 = (TextView) findViewById(R.id.textView_Latitude);
+            t1.setText( intent.getExtras().getString("latitude") );
+            
+            TextView t2 = (TextView) findViewById(R.id.textView_Longitude);
+            t2.setText( intent.getExtras().getString("longitude") );
+            
+            TextView t3 = (TextView) findViewById(R.id.textView_Altitude);
+            t3.setText( intent.getExtras().getString("altitude") );
+            
+            TextView t4 = (TextView) findViewById(R.id.textView_AvgSpeed);
+            t4.setText( intent.getExtras().getString("speed") );
+            
+            TextView t5 = (TextView) findViewById(R.id.textView_Distance);
+            
+            Float distance = intent.getExtras().getFloat("distance");
+            if (activityTitle.equals("Drive"))	{
+            	distance/=1000;
+            	t5.setText("Distance: "+distance+" km");
+            }
+            else	{
+            	t5.setText("Distance: "+distance+" m");
+            	vibrateAfterDistance(distance);
+            }
+            
+			
+		}
+		
+		
+    	
+    };
 
-	public float getMinAltitude() {
-		return minAltitude;
-	}
-
-	public void setMinAltitude(float minAltitude) {
-		this.minAltitude = minAltitude;
-	}
-
-	public long getTime_start() {
-		return time_start;
-	}
-
-	public void setTime_start(int time_start) {
-		this.time_start = time_start;
-	}
-
-	public long getTime_stop() {
-		return time_stop;
-	}
-
-	public void setTime_stop(int time_stop) {
-		this.time_stop = time_stop;
-	}
 }

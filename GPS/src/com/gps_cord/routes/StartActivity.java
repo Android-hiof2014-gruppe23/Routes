@@ -48,7 +48,7 @@ public class StartActivity extends ActionBarActivity implements OnItemSelectedLi
 		RadioButton radioActivityButton = (RadioButton) findViewById(selectedRadio);
         String radioButton = (String) radioActivityButton.getText();
         */
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, GPSActivity.class);
         intent.putExtra("radioButton", mode);
         
 		

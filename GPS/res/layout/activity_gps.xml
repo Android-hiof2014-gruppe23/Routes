@@ -6,14 +6,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >
+    tools:context=".GPSActivity" >
 
     <TextView
         android:id="@+id/textView_Latitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewTitle"
-        android:layout_below="@+id/textViewTitle"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="28dp"
         android:text="Lat" />
 
@@ -45,7 +44,7 @@
         android:text="Alt" />
 
     <TextView
-        android:id="@+id/textViewDistance"
+        android:id="@+id/textView_Distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView_AvgSpeed"
@@ -53,24 +52,23 @@
         android:layout_marginTop="36dp"
         android:text="Distance" />
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="38dp"
-        android:text="@string/start_stop"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <Button
         android:id="@+id/button_stop_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/textViewTitle"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="42dp"
         android:onClick="stopService"
         android:text="Stop Service" />
+
+    <Chronometer
+        android:id="@+id/chronometer1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button_stop_service"
+        android:layout_alignLeft="@+id/textView_Distance"
+        android:layout_marginBottom="43dp"
+        android:text="Chronometer" />
 
 </RelativeLayout>

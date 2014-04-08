@@ -2,16 +2,25 @@ package com.gps_cord.routes;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
+import com.gps_cord.routes.database.Activities;
 import com.gps_cord.routes.database.ActivitiesDataSource;
 
 
 public class ListOfActivities extends ListActivity {
 	
 	private ActivitiesDataSource datasource;
+	ArrayAdapter<MyActivity> adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,18 +28,79 @@ public class ListOfActivities extends ListActivity {
 		setContentView(R.layout.activity_list);
 		
 		getEntireList();
+		
+		datasource = new ActivitiesDataSource(this);
+		datasource.open();
+		
+		ListView listView = getListView();
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+			
+			@Override
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view,
+					int position, long id) {
+				deleteActivityDialog(position);
+				return true;
+			}
+		});
+		
 
+	}
+	
+	private void deleteActivityDialog(final int position) {
+		new AlertDialog.Builder(this)
+	        .setTitle("Delete activity?")
+	        .setMessage("Are you sure you want to delete this activity?")
+	        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) { 
+	            	adapter = (ArrayAdapter<MyActivity>) getListAdapter();
+					MyActivity myact = (MyActivity) adapter.getItem(position);
+					datasource.deleteActivity(myact);
+			        adapter.remove(myact);
+	            }
+	         })
+	        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+	            public void onClick(DialogInterface dialog, int which) { 
+	                // Do nothing
+	            }
+	         })
+	        .setIcon(android.R.drawable.ic_dialog_alert)
+	         .show();
 	}
 	
 	public void getEntireList()	{
 		datasource = new ActivitiesDataSource(this);
 		datasource.open();
 		
-		List<GPSActivity> values = datasource.getAllShows();
+		List<MyActivity> values = datasource.getAllShows();
 		//List<MyActivity> values = datasource.getAllShows();
 
-	    ArrayAdapter<GPSActivity> adapter = new ArrayAdapter<GPSActivity>(this, android.R.layout.simple_list_item_1, values);
+	    adapter = new ArrayAdapter<MyActivity>(this, android.R.layout.simple_list_item_1, values);
 	    setListAdapter(adapter);
 	}
+	
+	
+	
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		// TODO Auto-generated method stub
+		MyActivity myact = (MyActivity) getListAdapter().getItem(position);
+		
+		
+		Intent intent = new Intent(this, DataOfActivity.class);
+		intent.putExtra(Activities.COLUMN_ID, myact.get_id());
+		intent.putExtra(Activities.COLUMN_ACTIVITY_TYPE, myact.getType());
+		intent.putExtra(Activities.COLUMN_ACTIVITY_DISTANCE, myact.getDistance());
+		intent.putExtra(Activities.COLUMN_ACTIVITY_TIME_START, myact.getTime_start());
+		intent.putExtra(Activities.COLUMN_ACTIVITY_TIME_STOP, myact.getTime_stop());
+		intent.putExtra(Activities.COLUMN_AVG_SPEED, myact.getAvgSpeed());
+		intent.putExtra(Activities.COLUMN_MAX_SPEED, myact.getMaxSpeed());
+		intent.putExtra(Activities.COLUMN_MAX_ALTITUDE, myact.getMaxAltitude());
+		intent.putExtra(Activities.COLUMN_MIN_ALTITUDE, myact.getMinAltitude());
+		
+		startActivity(intent);
+	}
+	
+	
 
 }

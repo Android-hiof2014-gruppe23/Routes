@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gps_cord.routes.GPSActivity;
+import com.gps_cord.routes.MyActivity;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -60,12 +60,12 @@ public class ActivitiesDataSource {
 	}
 	
 	
-	public GPSActivity getActivity(long _id)	{
+	public MyActivity getActivity(long _id)	{
 		Cursor cursor = database.query(Activities.TABLE_ACTIVITIES,
 		        allActivityColumns, Activities.COLUMN_ID + " = " + _id, null,
 		        null, null, null);
 		    cursor.moveToFirst();
-		    GPSActivity newActivity = cursorToMyActivity(cursor);
+		    MyActivity newActivity = cursorToMyActivity(cursor);
 		    cursor.close();
 		    return newActivity;
 	}
@@ -82,8 +82,8 @@ public class ActivitiesDataSource {
 		return distance;
 	}
 	
-	public List<GPSActivity> getAllShows() {
-		List<GPSActivity> activities = new ArrayList<GPSActivity>();
+	public List<MyActivity> getAllShows() {
+		List<MyActivity> activities = new ArrayList<MyActivity>();
 		
 		Cursor cursor = database.query(Activities.TABLE_ACTIVITIES,
 										allActivityColumns, 
@@ -91,7 +91,7 @@ public class ActivitiesDataSource {
 	
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			GPSActivity myact = cursorToMyActivity(cursor);
+			MyActivity myact = cursorToMyActivity(cursor);
 			activities.add(myact);
 			cursor.moveToNext();
 		}
@@ -101,9 +101,14 @@ public class ActivitiesDataSource {
 		return activities;
 	}
 	
+	public void deleteActivity(MyActivity myact)	{
+		long id = myact.get_id();
+		database.delete(Activities.TABLE_ACTIVITIES, Activities.COLUMN_ID + " = " + id, null);
+	}
 	
-	private GPSActivity cursorToMyActivity(Cursor cursor) {
-	    GPSActivity myact = new GPSActivity();
+	
+	private MyActivity cursorToMyActivity(Cursor cursor) {
+	    MyActivity myact = new MyActivity();
 	    myact.set_id(cursor.getLong(0));
 	    myact.setType(cursor.getString(1));
 	    myact.setDistance(cursor.getFloat(2));

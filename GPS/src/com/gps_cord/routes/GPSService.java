@@ -32,8 +32,8 @@ public class GPSService extends Service {
 	public Location prevLocation;
 	public int countLocations = 0;
 	public float distanceSumInMeters = 0;
-	private Date time_start = null;
-	private Date time_stop = null;
+	private long time_start = -1;
+	private long time_stop = -1;
 	private float max_speed = 0;
 	private float max_altitude = 0;
 	private float min_altitude = Float.POSITIVE_INFINITY;
@@ -45,6 +45,8 @@ public class GPSService extends Service {
 	LocationManager lm;
 	LocationListener locationListener;
 	Intent runServiceIntent;
+	
+	Date date;
 	
 	
 	@Override
@@ -72,8 +74,9 @@ public class GPSService extends Service {
 		datasource = new ActivitiesDataSource(this);
 		datasource.open();
 		
-		time_stop = new Date();
-		datasource.createActivity(activityType, distanceSumInMeters, time_start.getTime(), time_stop.getTime(), calcAvgSpeed(), max_speed, max_altitude, min_altitude);
+		date = new Date();
+		time_stop = date.getTime()/1000;
+		datasource.createActivity(activityType, distanceSumInMeters, time_start, time_stop, calcAvgSpeed(), max_speed, max_altitude, min_altitude);
 		Toast toast = Toast.makeText(this, activityType+" "+distanceSumInMeters, Toast.LENGTH_SHORT);
 		toast.show();
 		
@@ -81,7 +84,7 @@ public class GPSService extends Service {
 	}
 	
 	private float calcAvgSpeed()	{
-		float time_diff = (float)(time_stop.getTime() - time_start.getTime())/1000;
+		long time_diff = time_stop - time_start;
 		return distanceSumInMeters/time_diff;
 	}
 	
@@ -111,7 +114,8 @@ public class GPSService extends Service {
 		Bundle extra = intent.getExtras();
 		activityType = extra.getString("activityType");
 		
-		time_start = new Date();
+		date = new Date();
+		time_start = date.getTime()/1000;
 		
 		return START_NOT_STICKY;
 	}
@@ -127,7 +131,7 @@ public class GPSService extends Service {
 		// Describe what to do if the user clicks on the notification in the status bar
 		String notificationTitleText = "Routes";
         String notificationBodyText = "Getting data from GPS";
-        Intent notificationActivityIntent = new Intent(this, MainActivity.class);
+        Intent notificationActivityIntent = new Intent(this, GPSActivity.class);
         notificationActivityIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent startMyActivityPendingIntent = PendingIntent.getActivity(this, 0, notificationActivityIntent, 0);
 		
