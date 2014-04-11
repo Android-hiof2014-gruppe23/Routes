@@ -5,19 +5,25 @@ package com.gps_cord.routes;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
-import com.gps_cord.routes.database.Activities;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.gps_cord.routes.database.Activities;
+
 
 public class DataOfActivity extends ActionBarActivity {
 
+	private GoogleMap map;
+	private LatLng HIOF = new LatLng(59.12797849, 11.35272861);
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,7 +68,11 @@ public class DataOfActivity extends ActionBarActivity {
 		TextView t_time = (TextView) findViewById(R.id.textView_time);
 		t_time.setText("Time: "+time);
 		
+		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+		map = mapFragment.getMap();
 		
+		map.addMarker(new MarkerOptions().position(HIOF).title("Høgskole i Østfold"));
+		map.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(HIOF, 13, 0, 0)));
 	}
 	
 	public  String getDate(long timestamp) {
