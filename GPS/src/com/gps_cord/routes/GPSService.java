@@ -18,6 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.gps_cord.routes.database.ActivitiesDataSource;
+import com.gps_cord.routes.database.CoordinatesDataSource;
 
 
 public class GPSService extends Service {
@@ -28,7 +29,9 @@ public class GPSService extends Service {
 	private String tag = "Livssyklus";
 	private String gps_data = "gps_data";
 	
-	private ActivitiesDataSource datasource;
+	private ActivitiesDataSource datasource_activities;
+	private CoordinatesDataSource datasource_coordinates;
+	
 	public Location prevLocation;
 	public int countLocations = 0;
 	public float distanceSumInMeters = 0;
@@ -37,6 +40,9 @@ public class GPSService extends Service {
 	private float max_speed = 0;
 	private float max_altitude = 0;
 	private float min_altitude = Float.POSITIVE_INFINITY;
+	
+	Double lastLatitude;
+	Double lastLongitude;
 	
 	
 	public String activityType;
@@ -71,16 +77,22 @@ public class GPSService extends Service {
 	}
 	
 	public void addToTable()	{
-		datasource = new ActivitiesDataSource(this);
-		datasource.open();
+		datasource_activities = new ActivitiesDataSource(this);
+		datasource_coordinates = new CoordinatesDataSource(this);
+		
+		datasource_activities.open();
 		
 		date = new Date();
 		time_stop = date.getTime()/1000;
-		datasource.createActivity(activityType, distanceSumInMeters, time_start, time_stop, calcAvgSpeed(), max_speed, max_altitude, min_altitude);
+		long _id = datasource_activities.createActivity(activityType, distanceSumInMeters, time_start, time_stop, calcAvgSpeed(), max_speed, max_altitude, min_altitude);
 		Toast toast = Toast.makeText(this, activityType+" "+distanceSumInMeters, Toast.LENGTH_SHORT);
 		toast.show();
+		datasource_activities.close();
 		
-		datasource.close();
+		datasource_coordinates.open();
+		datasource_coordinates.createCoordinates(_id, lastLatitude, lastLongitude);
+		datasource_coordinates.close();
+		
 	}
 	
 	private float calcAvgSpeed()	{
@@ -169,10 +181,13 @@ public class GPSService extends Service {
     	@Override
     	public void onLocationChanged(Location loc) {
     		Log.i(gps_data,"\n"+Integer.toString(gpsRefresh++));
-    		String s_latitude = "Lat: "+ Double.toString(loc.getLatitude());
+    		
+    		lastLatitude = loc.getLatitude();
+    		String s_latitude = "Lat: "+ Double.toString(lastLatitude);
             Log.i(gps_data,s_latitude);
             
-            String s_longitude = "Lng: " +Double.toString(loc.getLongitude());
+            lastLongitude = loc.getLongitude();
+            String s_longitude = "Lng: " +Double.toString(lastLongitude);
             Log.i(gps_data,s_longitude);
             
             double altitude = loc.getAltitude();

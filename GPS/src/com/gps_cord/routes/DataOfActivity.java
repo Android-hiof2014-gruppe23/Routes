@@ -17,10 +17,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.gps_cord.routes.database.Activities;
+import com.gps_cord.routes.database.CoordinatesDataSource;
 
 
 public class DataOfActivity extends ActionBarActivity {
-
+	
+	private CoordinatesDataSource datasource;
 	private GoogleMap map;
 	private LatLng HIOF = new LatLng(59.12797849, 11.35272861);
 	
@@ -30,6 +32,7 @@ public class DataOfActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_data);
 		
 		Bundle extras = getIntent().getExtras();
+		long _id = extras.getLong(Activities.COLUMN_ID);
 		String activityType = extras.getString(Activities.COLUMN_ACTIVITY_TYPE);
 		float avgSpeed = extras.getFloat(Activities.COLUMN_AVG_SPEED);
 		float maxSpeed = extras.getFloat(Activities.COLUMN_MAX_SPEED);
@@ -68,11 +71,14 @@ public class DataOfActivity extends ActionBarActivity {
 		TextView t_time = (TextView) findViewById(R.id.textView_time);
 		t_time.setText("Time: "+time);
 		
+		datasource = new CoordinatesDataSource(this);
+		datasource.open();
 		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
 		map = mapFragment.getMap();
 		
-		map.addMarker(new MarkerOptions().position(HIOF).title("Høgskole i Østfold"));
-		map.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(HIOF, 13, 0, 0)));
+		LatLng lastPos = datasource.getCoordinates(_id);
+		map.addMarker(new MarkerOptions().position(lastPos));
+		map.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(lastPos, 13, 0, 0)));
 	}
 	
 	public  String getDate(long timestamp) {

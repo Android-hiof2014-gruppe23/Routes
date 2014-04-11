@@ -14,7 +14,7 @@ public class Activities {
 	public static final String COLUMN_MAX_ALTITUDE = "max_altitude";
 	public static final String COLUMN_MIN_ALTITUDE = "min_altitude";
 	
-	private static final String DATABASE_CREATE_SHOW =
+	private static final String DATABASE_CREATE_ACTIVITIES =
 
 			"create table " + TABLE_ACTIVITIES + "(" + 
 			COLUMN_ID + " integer primary key autoincrement, " +
@@ -29,7 +29,7 @@ public class Activities {
 
 
 	public static void onCreate(SQLiteDatabase database) {
-		database.execSQL(DATABASE_CREATE_SHOW);
+		database.execSQL(DATABASE_CREATE_ACTIVITIES);
 		
 	}
 

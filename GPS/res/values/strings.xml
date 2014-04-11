@@ -14,5 +14,7 @@
     <string name="title_activity_list">List</string>
     <string name="list">List</string>
     <string name="title_activity_data_of">DataOfActivity</string>
+    <string name="title_activity_data_fragment">DataFragment</string>
+    <string name="title_activity_map_fragment">MapFragment</string>
 
 </resources>
