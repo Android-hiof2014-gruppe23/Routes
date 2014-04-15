@@ -1,6 +1,10 @@
 package com.gps_cord.routes.database;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.android.gms.maps.model.LatLng;
+import com.gps_cord.routes.MyActivity;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -52,6 +56,33 @@ public class CoordinatesDataSource {
 		    LatLng coordinates = new LatLng(cursor.getDouble(2), cursor.getDouble(3));
 		    return coordinates;
 	}
+
+	public void deleteOnID(MyActivity myact) {
+			long id = myact.get_id();
+			database.delete(Coordinates.TABLE_COORDINATES, Coordinates.COLUMN_ID + " = " + id, null);
+		
+	}
+	
+	public List<LatLng> getAllCoordinates(long _id) {
+		List<LatLng> coordinates = new ArrayList<>();
+		
+		Cursor cursor = database.query(Coordinates.TABLE_COORDINATES,
+										allCoordinatesColumns, 
+										Coordinates.COLUMN_ID + " = " + _id,
+										null, null, null,
+										Coordinates.COLUMN_COUNTER);
+	
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			 coordinates.add( new LatLng( cursor.getDouble(2), cursor.getDouble(3)) );
+			 cursor.moveToNext();
+		}
+		// Make sure to close the cursor
+		cursor.close();
+		
+		return coordinates;
+	}
+	
 	
 	
 }

@@ -1,5 +1,6 @@
 package com.gps_cord.routes;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
@@ -17,6 +18,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.gps_cord.routes.database.ActivitiesDataSource;
 import com.gps_cord.routes.database.CoordinatesDataSource;
 
@@ -41,8 +43,8 @@ public class GPSService extends Service {
 	private float max_altitude = 0;
 	private float min_altitude = Float.POSITIVE_INFINITY;
 	
-	Double lastLatitude;
-	Double lastLongitude;
+	
+	private ArrayList<LatLng> corList;
 	
 	
 	public String activityType;
@@ -85,14 +87,19 @@ public class GPSService extends Service {
 		date = new Date();
 		time_stop = date.getTime()/1000;
 		long _id = datasource_activities.createActivity(activityType, distanceSumInMeters, time_start, time_stop, calcAvgSpeed(), max_speed, max_altitude, min_altitude);
-		Toast toast = Toast.makeText(this, activityType+" "+distanceSumInMeters, Toast.LENGTH_SHORT);
-		toast.show();
+		addCoordinates(_id);
 		datasource_activities.close();
 		
-		datasource_coordinates.open();
-		datasource_coordinates.createCoordinates(_id, lastLatitude, lastLongitude);
-		datasource_coordinates.close();
 		
+		
+	}
+	
+	private void addCoordinates(long _id)	{
+		datasource_coordinates.open();
+		for(int i=0;i<corList.size();i++)	{
+			datasource_coordinates.createCoordinates(_id, corList.get(i).latitude,corList.get(i).longitude );
+		}
+		datasource_coordinates.close();
 	}
 	
 	private float calcAvgSpeed()	{
@@ -128,6 +135,8 @@ public class GPSService extends Service {
 		
 		date = new Date();
 		time_start = date.getTime()/1000;
+		
+		corList = new ArrayList<>();
 		
 		return START_NOT_STICKY;
 	}
@@ -182,13 +191,16 @@ public class GPSService extends Service {
     	public void onLocationChanged(Location loc) {
     		Log.i(gps_data,"\n"+Integer.toString(gpsRefresh++));
     		
-    		lastLatitude = loc.getLatitude();
+    		double lastLatitude = loc.getLatitude();
     		String s_latitude = "Lat: "+ Double.toString(lastLatitude);
             Log.i(gps_data,s_latitude);
             
-            lastLongitude = loc.getLongitude();
+            double lastLongitude = loc.getLongitude();
             String s_longitude = "Lng: " +Double.toString(lastLongitude);
             Log.i(gps_data,s_longitude);
+            
+            LatLng lastCoordinate = new LatLng(lastLatitude, lastLongitude);
+            corList.add(lastCoordinate);
             
             double altitude = loc.getAltitude();
             String s_altitude = "Alt: "+Double.toString(altitude);

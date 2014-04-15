@@ -15,11 +15,13 @@ import android.widget.ListView;
 
 import com.gps_cord.routes.database.Activities;
 import com.gps_cord.routes.database.ActivitiesDataSource;
+import com.gps_cord.routes.database.CoordinatesDataSource;
 
 
 public class ListOfActivities extends ListActivity {
 	
-	private ActivitiesDataSource datasource;
+	private ActivitiesDataSource datasource_activities;
+	private CoordinatesDataSource datasource_coordinates;
 	ArrayAdapter<MyActivity> adapter;
 	
 	@Override
@@ -29,8 +31,9 @@ public class ListOfActivities extends ListActivity {
 		
 		getEntireList();
 		
-		datasource = new ActivitiesDataSource(this);
-		datasource.open();
+		datasource_activities = new ActivitiesDataSource(this);
+		datasource_coordinates = new CoordinatesDataSource(this);
+		datasource_activities.open();
 		
 		ListView listView = getListView();
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
@@ -46,6 +49,16 @@ public class ListOfActivities extends ListActivity {
 
 	}
 	
+	
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		datasource_activities.close();
+	}
+
+
+
 	private void deleteActivityDialog(final int position) {
 		new AlertDialog.Builder(this)
 	        .setTitle("Delete activity?")
@@ -54,8 +67,12 @@ public class ListOfActivities extends ListActivity {
 	            public void onClick(DialogInterface dialog, int which) { 
 	            	adapter = (ArrayAdapter<MyActivity>) getListAdapter();
 					MyActivity myact = (MyActivity) adapter.getItem(position);
-					datasource.deleteActivity(myact);
+					datasource_activities.deleteActivity(myact);
 			        adapter.remove(myact);
+			        datasource_coordinates.open();
+			        datasource_coordinates.deleteOnID(myact);
+			        datasource_coordinates.close();
+			        
 	            }
 	         })
 	        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -68,10 +85,10 @@ public class ListOfActivities extends ListActivity {
 	}
 	
 	public void getEntireList()	{
-		datasource = new ActivitiesDataSource(this);
-		datasource.open();
+		datasource_activities = new ActivitiesDataSource(this);
+		datasource_activities.open();
 		
-		List<MyActivity> values = datasource.getAllShows();
+		List<MyActivity> values = datasource_activities.getAllActivities();
 		//List<MyActivity> values = datasource.getAllShows();
 
 	    adapter = new ArrayAdapter<MyActivity>(this, android.R.layout.simple_list_item_1, values);
@@ -85,7 +102,6 @@ public class ListOfActivities extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
 		MyActivity myact = (MyActivity) getListAdapter().getItem(position);
-		
 		
 		Intent intent = new Intent(this, DataOfActivity.class);
 		intent.putExtra(Activities.COLUMN_ID, myact.get_id());

@@ -81,7 +81,7 @@ public class ActivitiesDataSource {
 		return distance;
 	}
 	
-	public List<MyActivity> getAllShows() {
+	public List<MyActivity> getAllActivities() {
 		List<MyActivity> activities = new ArrayList<MyActivity>();
 		
 		Cursor cursor = database.query(Activities.TABLE_ACTIVITIES,
