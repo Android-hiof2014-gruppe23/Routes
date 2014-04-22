@@ -64,7 +64,7 @@ public class CoordinatesDataSource {
 	}
 	
 	public List<LatLng> getAllCoordinates(long _id) {
-		List<LatLng> coordinates = new ArrayList<>();
+		List<LatLng> coordinates = new ArrayList<LatLng>();
 		
 		Cursor cursor = database.query(Coordinates.TABLE_COORDINATES,
 										allCoordinatesColumns, 

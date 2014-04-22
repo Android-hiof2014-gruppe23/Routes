@@ -1,5 +1,8 @@
 package com.gps_cord.routes;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MyActivity {
 	private long _id;
@@ -39,7 +42,7 @@ public class MyActivity {
 	
 	@Override
 	public String toString() {
-		return type + " - " + distance + " - " + maxAltitude +" - " + minAltitude;
+		return type + " - " + getDate(time_start);
 	}
 
 	public float getAvgSpeed() {
@@ -89,4 +92,16 @@ public class MyActivity {
 	public void setTime_stop(int time_stop) {
 		this.time_stop = time_stop;
 	}
+	
+	public  String getDate(long timestamp) {
+        try{
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(timestamp * 1000);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            Date currenTimeZone = (Date) calendar.getTime();
+            return sdf.format(currenTimeZone);
+        }catch (Exception e) {
+        }
+        return "";
+    }
 }

@@ -8,50 +8,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".GPSActivity" >
 
-    <TextView
-        android:id="@+id/textView_Latitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp"
-        android:text="Lat" />
-
-    <TextView
-        android:id="@+id/textView_Longitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_Latitude"
-        android:layout_below="@+id/textView_Latitude"
-        android:layout_marginTop="16dp"
-        android:text="Lng" />
-
-    <TextView
-        android:id="@+id/textView_AvgSpeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_Altitude"
-        android:layout_below="@+id/textView_Altitude"
-        android:layout_marginTop="30dp"
-        android:text="Speed" />
-
-    <TextView
-        android:id="@+id/textView_Altitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_Longitude"
-        android:layout_below="@+id/textView_Longitude"
-        android:layout_marginTop="32dp"
-        android:text="Alt" />
-
-    <TextView
-        android:id="@+id/textView_Distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_AvgSpeed"
-        android:layout_below="@+id/textView_AvgSpeed"
-        android:layout_marginTop="36dp"
-        android:text="Distance" />
-
     <Button
         android:id="@+id/button_stop_service"
         android:layout_width="wrap_content"
@@ -62,13 +18,58 @@
         android:onClick="stopService"
         android:text="Stop Service" />
 
+    <TextView
+        android:id="@+id/textView_AvgSpd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/chronometer1"
+        android:layout_marginLeft="30dp"
+        android:text="avgspd" />
+
+    <TextView
+        android:id="@+id/textView_Altitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_AvgSpd"
+        android:layout_marginLeft="30dp"
+        android:text="Alt" />
+
+    <TextView
+        android:id="@+id/textView_AvgSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_Altitude"
+        android:layout_marginLeft="30dp"
+        android:text="Speed" />
+
+    <TextView
+        android:id="@+id/textView_Distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_AvgSpeed"
+        android:layout_marginLeft="30dp"
+        android:text="Distance" />
+
+    <TextView
+        android:id="@+id/textView_maxSpd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chronometer1"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="43dp"
+        android:text="MaxSpd" />
+
     <Chronometer
         android:id="@+id/chronometer1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button_stop_service"
-        android:layout_alignLeft="@+id/textView_Distance"
-        android:layout_marginBottom="43dp"
+        android:layout_alignRight="@+id/textView_Altitude"
+        android:layout_below="@+id/textView_maxSpd"
+        android:layout_marginTop="7dp"
         android:text="Chronometer" />
 
 </RelativeLayout>

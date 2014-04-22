@@ -84,8 +84,8 @@ public class GPSService extends Service {
 		
 		datasource_activities.open();
 		
-		date = new Date();
-		time_stop = date.getTime()/1000;
+		
+		
 		long _id = datasource_activities.createActivity(activityType, distanceSumInMeters, time_start, time_stop, calcAvgSpeed(), max_speed, max_altitude, min_altitude);
 		addCoordinates(_id);
 		datasource_activities.close();
@@ -103,6 +103,8 @@ public class GPSService extends Service {
 	}
 	
 	private float calcAvgSpeed()	{
+		date = new Date();
+		time_stop = date.getTime()/1000;
 		long time_diff = time_stop - time_start;
 		return distanceSumInMeters/time_diff;
 	}
@@ -136,7 +138,7 @@ public class GPSService extends Service {
 		date = new Date();
 		time_start = date.getTime()/1000;
 		
-		corList = new ArrayList<>();
+		corList = new ArrayList<LatLng>();
 		
 		return START_NOT_STICKY;
 	}
@@ -225,6 +227,8 @@ public class GPSService extends Service {
             updateUI.putExtra("speed", s_speed);
             //updateUI.putExtra("distance", "Distance: "+distanceSumInMeters);
             updateUI.putExtra("distance",distanceSumInMeters);
+            updateUI.putExtra("avgSpeed", calcAvgSpeed());
+            updateUI.putExtra("maxSpeed", max_speed);
             
             sendBroadcast(updateUI);
             

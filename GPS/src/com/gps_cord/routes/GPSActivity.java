@@ -33,11 +33,11 @@ public class GPSActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_gps);
 		
 		
-		chrono = (Chronometer) findViewById(R.id.chronometer1);
+		//chrono = (Chronometer) findViewById(R.id.chronometer1);
 		
 		
 		
-		chrono.start();
+		//chrono.start();
 		Bundle extra = getIntent().getExtras();
 		activityTitle = extra.getString("radioButton");
 		
@@ -119,7 +119,7 @@ public class GPSActivity extends ActionBarActivity {
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		chrono.stop();
+		//chrono.stop();
 		Log.d(tag, "Inne i onDestroy()");
 		unregisterReceiver(uiUpdated);
 	}
@@ -149,11 +149,11 @@ public class GPSActivity extends ActionBarActivity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			TextView t1 = (TextView) findViewById(R.id.textView_Latitude);
-            t1.setText( intent.getExtras().getString("latitude") );
+			TextView t1 = (TextView) findViewById(R.id.textView_maxSpd);
+            t1.setText( intent.getExtras().getString("maxSpeed") );
             
-            TextView t2 = (TextView) findViewById(R.id.textView_Longitude);
-            t2.setText( intent.getExtras().getString("longitude") );
+            TextView t2 = (TextView) findViewById(R.id.textView_AvgSpd);
+            t2.setText( intent.getExtras().getString("avgSpeed") );
             
             TextView t3 = (TextView) findViewById(R.id.textView_Altitude);
             t3.setText( intent.getExtras().getString("altitude") );

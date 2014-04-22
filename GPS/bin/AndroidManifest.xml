@@ -2,15 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gps_cord.routes"
     android:versionCode="2"
-    android:versionName="1.01" >
+    android:versionName="0.80b" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
-	
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,12 +21,13 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light" >
-        <meta-data 
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCeoxriV_etpJ8ff4_eferfx4QPQAo3GXw"/>
         <meta-data
-		    android:name="com.google.android.gms.version"
-		    android:value="@integer/google_play_services_version" />
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyA5rQajEyQNYXOSJeDdZ-muQs2PtDSnzIw" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name="com.gps_cord.routes.GPSActivity"
             android:label="@string/app_name" >
@@ -42,12 +43,6 @@
                 <action android:name="com.example.gps1.action.LOG_POS" />
             </intent-filter>
         </service>
-
-        <receiver android:name="com.gps_cord.routes.locationReceiver" >
-            <intent-filter>
-                <action android:name="com.example.gps1.action.LOCATION_UPDATED" />
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name="com.gps_cord.routes.StartActivity"
@@ -70,7 +65,10 @@
             android:name="com.gps_cord.routes.DataOfActivity"
             android:label="@string/title_activity_data_of" >
         </activity>
-        
+        <activity
+            android:name="com.gps_cord.routes.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>

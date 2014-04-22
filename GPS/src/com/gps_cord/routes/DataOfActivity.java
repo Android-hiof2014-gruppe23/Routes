@@ -7,6 +7,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -28,7 +30,7 @@ public class DataOfActivity extends ActionBarActivity {
 	
 	private CoordinatesDataSource datasource;
 	private GoogleMap map;
-	private LatLng HIOF = new LatLng(59.12797849, 11.35272861);
+
 	private List<LatLng> corList;
 	
 	private long _id;
@@ -41,11 +43,20 @@ public class DataOfActivity extends ActionBarActivity {
 	private long timeStart;
 	private long timeStop;
 	
+	SharedPreferences prefs;
+	String unitType;
+	Float VibDist;
 	
+	
+	@SuppressWarnings("deprecation")
+	@SuppressLint("WorldReadableFiles")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_data);
+		
+		prefs = getApplicationContext().getSharedPreferences("units_prefs", MODE_WORLD_READABLE);
+		unitType = prefs.getString(SettingsActivity.units, "Kilometers");
 		
 		Bundle extras = getIntent().getExtras();
 		_id = extras.getLong(Activities.COLUMN_ID);
@@ -70,22 +81,22 @@ public class DataOfActivity extends ActionBarActivity {
 		//t_date.setText(Long.toString(timeStart));
 		
 		TextView t_distance = (TextView) findViewById(R.id.textView_Distance);
-		t_distance.setText("Distance: "+Float.toString(distance));
+		t_distance.setText("Distance: "+distanceToString(distance));
 		
 		TextView t_avgSpeed = (TextView) findViewById(R.id.textView_AvgSpeed);
-		t_avgSpeed.setText("Avg speed: "+Float.toString(avgSpeed));
+		t_avgSpeed.setText("Avg speed: "+speedToString(avgSpeed));
 		
 		TextView t_maxSpeed = (TextView) findViewById(R.id.textView_MaxSpeed);
-		t_maxSpeed.setText("Max speed: "+Float.toString(maxSpeed));
+		t_maxSpeed.setText("Max speed: "+speedToString(maxSpeed));
 		
 		TextView t_minAltitude = (TextView) findViewById(R.id.textView_MinAltitude);
-		t_minAltitude.setText("Min altitude: "+Float.toString(minAltitude));
+		t_minAltitude.setText("Min altitude: "+altToString(minAltitude));
 		
 		TextView t_maxAltitude = (TextView) findViewById(R.id.textView_MaxAltitude);
-		t_maxAltitude.setText("Max altitude: "+Float.toString(maxAltitude));
+		t_maxAltitude.setText("Max altitude: "+altToString(maxAltitude));
 		
 		TextView t_time = (TextView) findViewById(R.id.textView_time);
-		t_time.setText("Time: "+time);
+		t_time.setText("Time: "+timeFormat(time));
 		
 		datasource = new CoordinatesDataSource(this);
 		datasource.open();
@@ -99,6 +110,85 @@ public class DataOfActivity extends ActionBarActivity {
 		drawStartFinishPoints();
 		
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(corList.get(0), 13, 0, 0)));
+	}
+	
+	private String distanceToString(float distance)	{
+		if(unitType.equals("Kilometers"))	{
+			double dist = Math.round(distance*100/1000)/100.00;
+			return dist + " km";
+		}
+		else if(unitType.equals("Miles"))	{
+			double dist = Math.round(distance*100/1603.344)/100.00;
+			return dist + " mi"; 
+		}
+		else	
+			return distance + " m";
+	}
+	
+	private String speedToString(float speed)	{
+		if(unitType.equals("Kilometers"))	{
+			double spd = (int) Math.round(speed*3.6*100)/100.00;
+			return spd + " km/h";
+		}
+		else if(unitType.equals("Miles"))	{
+			double spd = (int) Math.round(speed*2.237*100)/100.00;
+			return spd + " mph"; 
+		}
+		else	
+			return speed + " m/s";
+	}
+	
+	private String altToString(float alt)	{
+		if(unitType.equals("Kilometers"))	{
+			int al = (int) Math.round(alt);
+			return al + " m";
+		}
+		else if(unitType.equals("Miles"))	{
+			int al = (int) Math.round(alt*3.28);
+			return al + " ft"; 
+		}
+		else	
+			return alt + " m";
+	}
+	
+	private String timeFormat(long tm)	{
+		int hour = 0;
+		int minute = 0;
+		int second = 0;
+		
+		String s_hour;
+		String s_minute;
+		String s_second;
+		
+		while(tm >= 3600)	{
+			hour++;
+			tm-=3600;
+		}
+		while(tm >= 60)	{
+			minute++;
+			tm-=60;
+		}
+		while(tm >= 1)	{
+			second++;
+			tm--;
+		}
+		
+		if(hour < 10)
+			s_hour = "0"+hour;
+		else
+			s_hour = ""+hour;
+		
+		if(minute < 10)
+			s_minute = "0"+minute;
+		else
+			s_minute = ""+minute;
+		
+		if(second < 10)
+			s_second = "0"+second;
+		else
+			s_second = ""+second;
+		
+		return s_hour+":"+s_minute+":"+s_second;
 	}
 	
 	private void drawRoute() {

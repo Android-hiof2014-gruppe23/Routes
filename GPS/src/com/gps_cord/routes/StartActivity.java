@@ -36,6 +36,7 @@ public class StartActivity extends ActionBarActivity implements OnItemSelectedLi
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.list, menu);
+		getMenuInflater().inflate(R.menu.settings, menu);
 		return true;
 	}
 	
@@ -64,11 +65,11 @@ public class StartActivity extends ActionBarActivity implements OnItemSelectedLi
 		Intent listIntent = new Intent(this, ListOfActivities.class);
 		startActivity(listIntent);
 	}
-	
-	public void runTest(View v)	{
-		Intent intent = new Intent(this, Test.class);
-		startActivity(intent);
+	public void showSettings(MenuItem menuitem) 	{
+		Intent settingsIntent = new Intent(this, SettingsActivity.class);
+		startActivity(settingsIntent);
 	}
+	
 	
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
