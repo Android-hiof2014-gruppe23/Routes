@@ -45,7 +45,6 @@ public class DataOfActivity extends ActionBarActivity {
 	
 	SharedPreferences prefs;
 	String unitType;
-	Float VibDist;
 	
 	
 	@SuppressWarnings("deprecation")
@@ -83,7 +82,7 @@ public class DataOfActivity extends ActionBarActivity {
 		TextView t_distance = (TextView) findViewById(R.id.textView_Distance);
 		t_distance.setText("Distance: "+distanceToString(distance));
 		
-		TextView t_avgSpeed = (TextView) findViewById(R.id.textView_AvgSpeed);
+		TextView t_avgSpeed = (TextView) findViewById(R.id.textView_Speed);
 		t_avgSpeed.setText("Avg speed: "+speedToString(avgSpeed));
 		
 		TextView t_maxSpeed = (TextView) findViewById(R.id.textView_MaxSpeed);

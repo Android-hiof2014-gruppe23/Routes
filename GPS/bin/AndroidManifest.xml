@@ -43,6 +43,12 @@
                 <action android:name="com.example.gps1.action.LOG_POS" />
             </intent-filter>
         </service>
+        
+        <receiver android:name="com.gps_cord.routes.locationReceiver" >
+            <intent-filter>
+                <action android:name=".LOCATION_UPDATED" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name="com.gps_cord.routes.StartActivity"

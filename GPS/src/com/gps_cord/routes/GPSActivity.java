@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
@@ -21,8 +22,14 @@ public class GPSActivity extends ActionBarActivity {
 	static Intent runServiceIntent;
 	public String activityTitle;
 	
-	float vibJump = 1000;
-	float vibDistance = 1000;
+	SharedPreferences prefs;
+	String unitType;
+	String vibDistance;
+	
+	float vibJump;
+	float vibDist;
+	
+	Float distance = (float) 0.0;
 	
 	Chronometer chrono;
 	
@@ -32,12 +39,18 @@ public class GPSActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gps);
 		
+		prefs = getApplicationContext().getSharedPreferences("units_prefs", MODE_WORLD_READABLE);
+		unitType = prefs.getString(SettingsActivity.units, "Kilometers");
+		vibDistance = prefs.getString(SettingsActivity.vibDist, "1.0");
 		
-		//chrono = (Chronometer) findViewById(R.id.chronometer1);
+		vibDist = Float.parseFloat(vibDistance);
+		vibJump = vibDist; 
+		
+		chrono = (Chronometer) findViewById(R.id.chronometer1);
 		
 		
 		
-		//chrono.start();
+		chrono.start();
 		Bundle extra = getIntent().getExtras();
 		activityTitle = extra.getString("radioButton");
 		
@@ -46,6 +59,7 @@ public class GPSActivity extends ActionBarActivity {
 		setTitle(activityTitle);
 		
 		Log.d(tag, "Inne i onCreate()");
+		
 		registerReceiver(uiUpdated,new IntentFilter("LOCATION_UPDATED"));
 		
 		if(runServiceIntent == null)	{
@@ -79,11 +93,11 @@ public class GPSActivity extends ActionBarActivity {
 			stopService(runServiceIntent);
 			//unregisterReceiver(uiUpdated);
 			runServiceIntent = null;
-		}
+		
 		finish();
 		Intent intent = new Intent(this, ListOfActivities.class);
 		startActivity(intent);
-		
+		}
 	}
 	
 	
@@ -137,12 +151,24 @@ public class GPSActivity extends ActionBarActivity {
 	}
     
     public void vibrateAfterDistance(float distance)	{
-    	if(distance>vibDistance)	{
+    	if(distance>vibrateDistCalc(vibDist))	{
     		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     		v.vibrate(1000);
     		Log.i(tag,"Vibrasjon etter "+distance);
-    		vibDistance+=vibJump;
+    		vibDist+=vibJump;
     	}
+    }
+    
+    private float vibrateDistCalc(float vibDist)	{
+    	if(unitType.equals("Kilometers"))	{
+			return (float) (Math.round(vibDist*100/1000)/100.00);
+			
+		}
+		else if(unitType.equals("Miles"))	{
+			return (float) (Math.round(vibDist*100/1603.344)/100.00);
+		}
+		else
+			return 1000;
     }
     
     BroadcastReceiver uiUpdated = new BroadcastReceiver()	{
@@ -150,30 +176,74 @@ public class GPSActivity extends ActionBarActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			TextView t1 = (TextView) findViewById(R.id.textView_maxSpd);
-            t1.setText( intent.getExtras().getString("maxSpeed") );
+            Float maxSpeed = intent.getExtras().getFloat("maxSpeed");
+            if(unitType.equals("Kilometers"))	
+			t1.setText("Max Speed: "+ speedToString(maxSpeed) );
             
             TextView t2 = (TextView) findViewById(R.id.textView_AvgSpd);
-            t2.setText( intent.getExtras().getString("avgSpeed") );
+            Float avgSpeed = intent.getExtras().getFloat("avgSpeed");
+            t2.setText("Avg Speed: " + speedToString(avgSpeed) );
             
             TextView t3 = (TextView) findViewById(R.id.textView_Altitude);
-            t3.setText( intent.getExtras().getString("altitude") );
+            Double altitude = intent.getExtras().getDouble("altitude");
             
-            TextView t4 = (TextView) findViewById(R.id.textView_AvgSpeed);
-            t4.setText( intent.getExtras().getString("speed") );
+            t3.setText( "Altitude: " + altToString(altitude) );
+            
+            TextView t4 = (TextView) findViewById(R.id.textView_Speed);
+            Double speed = intent.getExtras().getDouble("speed");
+            t4.setText( "Speed: "+ speedToString( speed.floatValue()) );
             
             TextView t5 = (TextView) findViewById(R.id.textView_Distance);
             
-            Float distance = intent.getExtras().getFloat("distance");
+            distance = intent.getExtras().getFloat("distance");
             if (activityTitle.equals("Drive"))	{
-            	distance/=1000;
-            	t5.setText("Distance: "+distance+" km");
+            	t5.setText("Distance: "+distanceToString(distance));
             }
             else	{
-            	t5.setText("Distance: "+distance+" m");
+            	t5.setText("Distance: "+distanceToString(distance));
             	vibrateAfterDistance(distance);
             }
             
 			
+		}
+		
+		private String distanceToString(float distance)	{
+			if(unitType.equals("Kilometers"))	{
+				double dist = Math.round(distance*100/1000)/100.00;
+				return dist + " km";
+			}
+			else if(unitType.equals("Miles"))	{
+				double dist = Math.round(distance*100/1603.344)/100.00;
+				return dist + " mi"; 
+			}
+			else	
+				return distance + " m";
+		}
+		
+		private String speedToString(float speed)	{
+			if(unitType.equals("Kilometers"))	{
+				double spd = (int) Math.round(speed*3.6*100)/100.00;
+				return spd + " km/h";
+			}
+			else if(unitType.equals("Miles"))	{
+				double spd = (int) Math.round(speed*2.237*100)/100.00;
+				return spd + " mph"; 
+			}
+			else	
+				return speed + " m/s";
+		}
+		
+		private String altToString(double alt)	{
+			if(unitType.equals("Kilometers"))	{
+				int al = (int) Math.round(alt);
+				return al + " m";
+			}
+			else if(unitType.equals("Miles"))	{
+				int al = (int) Math.round(alt*3.28);
+				return al + " ft"; 
+			}
+			else	
+				return alt + " m";
 		}
 		
 		

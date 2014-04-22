@@ -103,8 +103,8 @@ public class GPSService extends Service {
 	}
 	
 	private float calcAvgSpeed()	{
-		date = new Date();
-		time_stop = date.getTime()/1000;
+		Date tempDate = new Date();
+		time_stop = tempDate.getTime()/1000;
 		long time_diff = time_stop - time_start;
 		return distanceSumInMeters/time_diff;
 	}
@@ -195,18 +195,17 @@ public class GPSService extends Service {
     		
     		double lastLatitude = loc.getLatitude();
     		String s_latitude = "Lat: "+ Double.toString(lastLatitude);
-            Log.i(gps_data,s_latitude);
+            
             
             double lastLongitude = loc.getLongitude();
             String s_longitude = "Lng: " +Double.toString(lastLongitude);
-            Log.i(gps_data,s_longitude);
             
             LatLng lastCoordinate = new LatLng(lastLatitude, lastLongitude);
             corList.add(lastCoordinate);
             
             double altitude = loc.getAltitude();
             String s_altitude = "Alt: "+Double.toString(altitude);
-            Log.i(gps_data,s_longitude);
+            
             calcMaxAltitude(altitude);
             calcMinAltitude(altitude);
             
@@ -215,20 +214,35 @@ public class GPSService extends Service {
             
             double km = 3.6*speed;
             String s_speed = "Speed: "+Double.toString(km)+" km/h";
-            Log.i(gps_data,s_speed);
             
             calcDistance(loc);
-            Log.i(gps_data,Float.toString(distanceSumInMeters));
+            
+            
+            float avgspeed = calcAvgSpeed();
+            Log.i(gps_data,Float.toString(avgspeed));
             
             Intent updateUI = new Intent("LOCATION_UPDATED");
-            updateUI.putExtra("latitude", s_latitude);
-            updateUI.putExtra("longitude", s_longitude);
-            updateUI.putExtra("altitude", s_altitude);
-            updateUI.putExtra("speed", s_speed);
-            //updateUI.putExtra("distance", "Distance: "+distanceSumInMeters);
+            
+            updateUI.putExtra("latitude", lastLatitude);
+            Log.i(gps_data,"Lat: "+lastLatitude);
+            
+            updateUI.putExtra("longitude", lastLongitude);
+            Log.i(gps_data,"Lng: "+lastLongitude);
+            
+            updateUI.putExtra("altitude", altitude);
+            Log.i(gps_data,"Alt: "+altitude);
+            
+            updateUI.putExtra("speed", speed);
+            Log.i(gps_data,"Spd: "+speed);
+            
             updateUI.putExtra("distance",distanceSumInMeters);
-            updateUI.putExtra("avgSpeed", calcAvgSpeed());
+            Log.i(gps_data,"Distance: "+distanceSumInMeters);
+            
+            updateUI.putExtra("avgSpeed", avgspeed);
+            Log.i(gps_data,"Avg speed: "+avgspeed);
+            
             updateUI.putExtra("maxSpeed", max_speed);
+            Log.i(gps_data,"Max speed: "+max_speed);
             
             sendBroadcast(updateUI);
             

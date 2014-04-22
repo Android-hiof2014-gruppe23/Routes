@@ -313,7 +313,7 @@ int id beginning 0x7f060014
 int id buttonStart 0x7f060053
 int id button_stop_service 0x7f060049
 int id checkbox 0x7f060030
-int id chronometer1 0x7f06004c
+int id chronometer1 0x7f06004b
 int id collapseActionView 0x7f060011
 int id container 0x7f060041
 int id dataFragment 0x7f06003f
@@ -366,14 +366,14 @@ int id submit_area 0x7f06003c
 int id tabMode 0x7f060006
 int id terrain 0x7f060003
 int id textView2 0x7f060054
-int id textView_Altitude 0x7f06004a
-int id textView_AvgSpd 0x7f06004b
-int id textView_AvgSpeed 0x7f060043
+int id textView_Altitude 0x7f06004c
+int id textView_AvgSpd 0x7f06004a
 int id textView_Date 0x7f060042
 int id textView_Distance 0x7f060046
 int id textView_MaxAltitude 0x7f060047
 int id textView_MaxSpeed 0x7f060045
 int id textView_MinAltitude 0x7f060048
+int id textView_Speed 0x7f060043
 int id textView_Unit 0x7f06004f
 int id textView_VibDist 0x7f060051
 int id textView_maxSpd 0x7f06004d
