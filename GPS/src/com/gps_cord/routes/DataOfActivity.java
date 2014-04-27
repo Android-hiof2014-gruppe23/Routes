@@ -197,7 +197,6 @@ public class DataOfActivity extends ActionBarActivity {
 		
 		for(int i=0;i<corList.size();i++)	{
 			rectLine.add(corList.get(i));
-			//map.addMarker(new MarkerOptions().position(corList.get(i)).title(Integer.toString(i)));
 		}
 		map.addPolyline(rectLine);
 		

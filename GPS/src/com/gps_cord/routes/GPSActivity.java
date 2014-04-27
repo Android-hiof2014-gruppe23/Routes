@@ -1,10 +1,20 @@
 package com.gps_cord.routes;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Vibrator;
@@ -31,7 +41,13 @@ public class GPSActivity extends ActionBarActivity {
 	
 	Float distance = (float) 0.0;
 	
+	GoogleMap map;
+	PolylineOptions rectLine;
+	
 	Chronometer chrono;
+	
+	double lat = 0;
+	double lng = 0;
 	
 	
 	@Override
@@ -48,41 +64,50 @@ public class GPSActivity extends ActionBarActivity {
 		
 		chrono = (Chronometer) findViewById(R.id.chronometer1);
 		
-		
+		rectLine = new PolylineOptions().width(10).color(Color.RED);
 		
 		chrono.start();
 		Bundle extra = getIntent().getExtras();
-		activityTitle = extra.getString("radioButton");
+		activityTitle = extra.getString("mode");
 		
-		//TextView title = (TextView) findViewById(R.id.textViewTitle);
-		//title.setText(activityTitle);
+		
 		setTitle(activityTitle);
 		
 		Log.d(tag, "Inne i onCreate()");
 		
 		registerReceiver(uiUpdated,new IntentFilter("LOCATION_UPDATED"));
 		
+		
+		/**
+		 * draw a map
+		 */
+		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+		map = mapFragment.getMap();
+		
 		if(runServiceIntent == null)	{
-			runServiceIntent = new Intent("com.example.gps1.action.LOG_POS");
+			runServiceIntent = new Intent("com.gps_cord.routes.LOG_POS");
 			runServiceIntent.putExtra("activityType", activityTitle);
 			startService(runServiceIntent);
+			
+			/**
+			 * before running service, sets start position with marker
+			 */
+			lat = extra.getDouble("lat");
+			lng = extra.getDouble("lng");
+			
+			LatLng ltlg = new LatLng(lat,lng); 
+			map.moveCamera((CameraUpdateFactory.newCameraPosition(new CameraPosition(ltlg, 15, 0, 0))));
+			map.addMarker(new MarkerOptions()
+						.position(ltlg)
+						.title("Start")
+						.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+			
+			chrono.start();
+			
 		}
 		
 		
 		
-		
-		
-	}
-	
-	public void startService(View v) {
-		
-		Log.d(tag, "Start Service knapp trykket");
-		if(runServiceIntent == null)	{
-			runServiceIntent = new Intent("com.example.gps1.action.LOG_POS");
-			
-			
-			startService(runServiceIntent);
-		}
 	}
 	
 	public void stopService(View v) {
@@ -101,39 +126,11 @@ public class GPSActivity extends ActionBarActivity {
 	}
 	
 	
-	@Override
-	protected void onStart()
-	{
-		super.onStart();
-		Log.d(tag, "Inne i onStart()");
-	}
-
-	@Override
-	protected void onResume()
-	{
-		super.onResume();
-		Log.d(tag, "Inne i onResume()");
-	}
-
-	@Override
-	protected void onPause()
-	{
-		super.onPause();
-		Log.d(tag, "Inne i onPause()");
-	}
-
-	@Override
-	protected void onStop()
-	{
-		super.onStop();
-		Log.d(tag, "Inne i onStop()");
-	}
 
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		//chrono.stop();
 		Log.d(tag, "Inne i onDestroy()");
 		unregisterReceiver(uiUpdated);
 	}
@@ -204,8 +201,22 @@ public class GPSActivity extends ActionBarActivity {
             	vibrateAfterDistance(distance);
             }
             
+            /**
+             * gets newest location from service and drawes a polyline on map
+             * camera gets moved to newest position every time position changes
+             */
+            lat = intent.getExtras().getDouble("latitude");
+            lng = intent.getExtras().getDouble("longitude");
+            LatLng ltlg = new LatLng(lat,lng);
+            rectLine.add(ltlg);
+            map.addPolyline(rectLine);
+            map.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(ltlg, 15, 0, 0)));
+            
+            
 			
 		}
+		
+		
 		
 		private String distanceToString(float distance)	{
 			if(unitType.equals("Kilometers"))	{

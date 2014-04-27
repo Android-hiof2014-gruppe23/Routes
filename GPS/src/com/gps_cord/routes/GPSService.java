@@ -52,6 +52,7 @@ public class GPSService extends Service {
 	
 	LocationManager lm;
 	LocationListener locationListener;
+	
 	Intent runServiceIntent;
 	
 	Date date;
