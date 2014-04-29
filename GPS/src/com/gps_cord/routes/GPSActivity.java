@@ -9,8 +9,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -23,6 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
@@ -72,6 +75,8 @@ public class GPSActivity extends ActionBarActivity {
 		
 		
 		setTitle(activityTitle);
+		setIcon(activityTitle);
+		
 		
 		Log.d(tag, "Inne i onCreate()");
 		
@@ -110,10 +115,54 @@ public class GPSActivity extends ActionBarActivity {
 		
 	}
 	
+	private void setIcon(String activityTitle) {
+		if(activityTitle.equals("Drive"))	{
+			getSupportActionBar().setIcon(R.drawable.car);
+		}
+		else if(activityTitle.equals("Go"))	{
+			getSupportActionBar().setIcon(R.drawable.person);
+		}
+			
+	}
+	
+	
+	
+	
+	@Override
+	public void onBackPressed() {
+		
+		new AlertDialog.Builder(this)
+        .setTitle("Stop activity?")
+        .setMessage("Are you sure you want to stop this activity?")
+        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            	
+        	@Override
+				public void onClick(DialogInterface dialog, int which) {
+					stop();
+					
+				}
+		        
+            }
+         )
+        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) { 
+                // Do nothing
+            }
+         })
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .show();
+		
+		}
+		
+
 	public void stopService(View v) {
 		
 		Log.d(tag, "Stop Service knapp trykket");
+		stop();
 		
+	}
+	
+	private void stop()	{
 		if(runServiceIntent != null)	{
 			stopService(runServiceIntent);
 			//unregisterReceiver(uiUpdated);
@@ -211,7 +260,7 @@ public class GPSActivity extends ActionBarActivity {
             rectLine.add(ltlg);
             map.addPolyline(rectLine);
             map.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(ltlg, 15, 0, 0)));
-            
+            map.setMyLocationEnabled(true);
             
 			
 		}

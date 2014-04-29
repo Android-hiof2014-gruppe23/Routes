@@ -69,10 +69,13 @@ public class DataOfActivity extends ActionBarActivity {
 		timeStop = extras.getLong(Activities.COLUMN_ACTIVITY_TIME_STOP);
 		
 		setTitle(activityType);
+		setIcon(activityType);
 		
 		String s_date = getDate(timeStart);
 		
 		long time = timeStop-timeStart;
+		
+		
 		
 		
 		TextView t_date = (TextView) findViewById(R.id.textView_Date);
@@ -109,6 +112,16 @@ public class DataOfActivity extends ActionBarActivity {
 		drawStartFinishPoints();
 		
 		map.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(corList.get(0), 13, 0, 0)));
+	}
+	
+	private void setIcon(String activityTitle) {
+		if(activityTitle.equals("Drive"))	{
+			getSupportActionBar().setIcon(R.drawable.car);
+		}
+		else if(activityTitle.equals("Go"))	{
+			getSupportActionBar().setIcon(R.drawable.person);
+		}
+			
 	}
 	
 	private String distanceToString(float distance)	{

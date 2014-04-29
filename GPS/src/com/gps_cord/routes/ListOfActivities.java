@@ -1,23 +1,25 @@
 package com.gps_cord.routes;
 
 import java.util.List;
-
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import com.gps_cord.routes.database.Activities;
 import com.gps_cord.routes.database.ActivitiesDataSource;
 import com.gps_cord.routes.database.CoordinatesDataSource;
 
 
+@SuppressLint("NewApi")
 public class ListOfActivities extends ListActivity {
 	
 	private ActivitiesDataSource datasource_activities;
@@ -30,7 +32,11 @@ public class ListOfActivities extends ListActivity {
 		setContentView(R.layout.activity_list);
 		
 		getEntireList();
-		
+		final int sdkVersion = Build.VERSION.SDK_INT;
+		if (sdkVersion >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			getActionBar().setIcon(R.drawable.list);
+		}
 		datasource_activities = new ActivitiesDataSource(this);
 		datasource_coordinates = new CoordinatesDataSource(this);
 		datasource_activities.open();

@@ -44,7 +44,7 @@ public class StartActivity extends ActionBarActivity implements OnItemSelectedLi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);
-		
+		/*
 		Spinner spinner = (Spinner) findViewById(R.id.layers_spinner);
         
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.activity_modes_array, android.R.layout.simple_spinner_item);
@@ -52,6 +52,7 @@ public class StartActivity extends ActionBarActivity implements OnItemSelectedLi
         spinner.setAdapter(adapter);
         
         spinner.setOnItemSelectedListener(this);
+        */
         
         /**
          * Maps is being drawed and position listener starts
@@ -65,6 +66,29 @@ public class StartActivity extends ActionBarActivity implements OnItemSelectedLi
 		
 	}
 	
+	public void driveActivity(View v) {
+		 Intent intent = new Intent(this, GPSActivity.class);
+	     intent.putExtra("mode", "Drive");
+	     //sends last known position data to next activity
+	     intent.putExtra("lat",lat);
+	     intent.putExtra("lng", lng);
+	        
+	     startActivity(intent);
+		
+		
+	}
+
+	public void goActivity(View v) {
+		Intent intent = new Intent(this, GPSActivity.class);
+	     intent.putExtra("mode", "Go");
+	     //sends last known position data to next activity
+	     intent.putExtra("lat",lat);
+	     intent.putExtra("lng", lng);
+	        
+	     startActivity(intent);
+	
+	
+	}
 	
 
 	@Override
@@ -100,17 +124,7 @@ public class StartActivity extends ActionBarActivity implements OnItemSelectedLi
 		RadioButton radioActivityButton = (RadioButton) findViewById(selectedRadio);
         String radioButton = (String) radioActivityButton.getText();
         */
-        Intent intent = new Intent(this, GPSActivity.class);
-        intent.putExtra("mode", mode);
-        //sends last known position data to next activity
-        intent.putExtra("lat",lat);
-        intent.putExtra("lng", lng);
-        
-		
-        Toast.makeText(this,
-        		 /*radioActivityButton.getText()*/mode, Toast.LENGTH_SHORT).show();
-        
-        startActivity(intent);
+       
 		
 		
 	}
