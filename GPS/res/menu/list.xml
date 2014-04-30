@@ -6,6 +6,7 @@
         android:orderInCategory="1"
         Routes:showAsAction="always"
         android:onClick="showList"
-        android:title="@string/list"/>
+        android:title="@string/list"
+        android:icon="@drawable/list"/>
 
 </menu>
