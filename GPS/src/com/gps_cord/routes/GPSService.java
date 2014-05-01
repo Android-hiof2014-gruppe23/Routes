@@ -1,17 +1,32 @@
 package com.gps_cord.routes;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -30,6 +45,7 @@ public class GPSService extends Service {
 	int gpsRefresh = 0;
 	private String tag = "Livssyklus";
 	private String gps_data = "gps_data";
+	long _id;
 	
 	private ActivitiesDataSource datasource_activities;
 	private CoordinatesDataSource datasource_coordinates;
@@ -87,9 +103,13 @@ public class GPSService extends Service {
 		
 		
 		
-		long _id = datasource_activities.createActivity(activityType, distanceSumInMeters, time_start, time_stop, calcAvgSpeed(), max_speed, max_altitude, min_altitude);
-		addCoordinates(_id);
+		_id = datasource_activities.createActivity(activityType, distanceSumInMeters, time_start, time_stop, calcAvgSpeed(), max_speed, max_altitude, min_altitude);
 		datasource_activities.close();
+		
+		SaveCoordinates sc = new SaveCoordinates();
+		sc.execute();
+		//addCoordinates(_id);
+		
 		
 		
 		
@@ -149,7 +169,7 @@ public class GPSService extends Service {
 	{
 		// Set basic notification information
 		int notificationIcon = R.drawable.ic_launcher;
-		String notificationTickerText = "Launching my service";
+		String notificationTickerText = "Getting data from GPS";
 		long notificationTimeStamp = System.currentTimeMillis();
 		
 		// Describe what to do if the user clicks on the notification in the status bar
@@ -279,6 +299,41 @@ public class GPSService extends Service {
     	}
 
     }
+	
+	public class SaveCoordinates extends AsyncTask<Void, Void, Void>{
+
+		ProgressDialog dialog;
+		@Override
+		protected void onPreExecute() 
+		{
+			
+			super.onPreExecute();
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) 
+		{
+			
+			datasource_coordinates.open();
+			for(int i=0;i<corList.size();i++)	{
+				datasource_coordinates.createCoordinates(_id, corList.get(i).latitude,corList.get(i).longitude );
+			}
+			datasource_coordinates.close();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			
+			
+			super.onPostExecute(result);
+			
+		}
+		
+		
+		      
+		     
+	}
 }
 
 

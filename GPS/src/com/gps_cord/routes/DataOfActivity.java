@@ -12,7 +12,10 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +23,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.LatLngBounds.Builder;
+import com.google.android.gms.maps.model.LatLngBoundsCreator;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.gps_cord.routes.database.Activities;
@@ -43,6 +49,15 @@ public class DataOfActivity extends ActionBarActivity {
 	private long timeStart;
 	private long timeStop;
 	
+	private double maxLatitude = 0;
+	private double minLatitude = Double.POSITIVE_INFINITY;
+	private double maxLongitude = 0;
+	private double minLongitude = Double.POSITIVE_INFINITY;
+	
+	private LatLngBounds.Builder bounds;
+	
+	View mapView;
+	
 	SharedPreferences prefs;
 	String unitType;
 	
@@ -53,6 +68,12 @@ public class DataOfActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_data);
+		
+		
+
+		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+		map = mapFragment.getMap();
+		mapView = mapFragment.getView();
 		
 		prefs = getApplicationContext().getSharedPreferences("units_prefs", MODE_WORLD_READABLE);
 		unitType = prefs.getString(SettingsActivity.units, "Kilometers");
@@ -105,15 +126,44 @@ public class DataOfActivity extends ActionBarActivity {
 		corList = datasource.getAllCoordinates(_id);
 		datasource.close();
 		
-		SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-		map = mapFragment.getMap();
 		
-		drawRoute();
-		drawStartFinishPoints();
+		bounds = new Builder();
+		if(!corList.isEmpty())	{
+			drawRoute();
+			drawStartFinishPoints();
+			setBorders();
+		}else{
+			Toast.makeText(this, "No map data", Toast.LENGTH_SHORT).show();
+		}
 		
-		map.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(corList.get(0), 13, 0, 0)));
+		
 	}
 	
+	
+	private void setBorders()	{
+		//bounds = new LatLngBounds(new LatLng(minLatitude, minLongitude), new LatLng(maxLatitude, maxLongitude));
+		
+		//map.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(corList.get(corList.size()-1), 13, 0, 0)));
+		//map.moveCamera(CameraUpdateFactory.newLatLngZoom(bounds.build().getCenter(), 10));
+		try {
+			
+			if (mapView.getViewTreeObserver().isAlive()) {
+			    mapView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+			        public void onGlobalLayout() {
+			            mapView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+			            map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100));
+			            //map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100), 1500, null);         
+			        }
+			    });
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			//Toast.makeText(this, "not work :(", Toast.LENGTH_LONG).show();
+		}
+	}
+
 	private void setIcon(String activityTitle) {
 		if(activityTitle.equals("Drive"))	{
 			getSupportActionBar().setIcon(R.drawable.car);
@@ -130,7 +180,7 @@ public class DataOfActivity extends ActionBarActivity {
 			return dist + " km";
 		}
 		else if(unitType.equals("Miles"))	{
-			double dist = Math.round(distance*100/1603.344)/100.00;
+			double dist = Math.round(distance*100/1609.344)/100.00;
 			return dist + " mi"; 
 		}
 		else	
@@ -210,10 +260,40 @@ public class DataOfActivity extends ActionBarActivity {
 		
 		for(int i=0;i<corList.size();i++)	{
 			rectLine.add(corList.get(i));
+			bounds.include(corList.get(i));
+			
+			/*
+			setMaxLat(corList.get(i).latitude);
+			setMinLat(corList.get(i).latitude);
+			setMaxLng(corList.get(i).longitude);
+			setMinLng(corList.get(i).longitude);
+			*/
+			
 		}
 		map.addPolyline(rectLine);
 		
 		
+	}
+	
+	private void setMaxLat(double latitude)	{
+		if(latitude > maxLatitude)	{
+			maxLatitude = latitude;
+		}
+	}
+	private void setMinLat(double latitude)	{
+		if(latitude < minLatitude)	{
+			minLatitude = latitude;
+		}
+	}
+	private void setMaxLng(double longitude)	{
+		if(longitude > maxLongitude)	{
+			maxLongitude = longitude;
+		}
+	}
+	private void setMinLng(double longitude)	{
+		if(longitude < minLongitude)	{
+			minLongitude = longitude;
+		}
 	}
 
 	public void drawStartFinishPoints()	{

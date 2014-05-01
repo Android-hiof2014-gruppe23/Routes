@@ -69,7 +69,7 @@ public class ListOfActivities extends ListActivity {
 		new AlertDialog.Builder(this)
 	        .setTitle("Delete activity?")
 	        .setMessage("Are you sure you want to delete this activity?")
-	        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 	            public void onClick(DialogInterface dialog, int which) { 
 	            	adapter = (ArrayAdapter<MyActivity>) getListAdapter();
 					MyActivity myact = (MyActivity) adapter.getItem(position);
@@ -81,7 +81,7 @@ public class ListOfActivities extends ListActivity {
 			        
 	            }
 	         })
-	        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+	        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 	            public void onClick(DialogInterface dialog, int which) { 
 	                // Do nothing
 	            }
@@ -107,6 +107,7 @@ public class ListOfActivities extends ListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
+		
 		MyActivity myact = (MyActivity) getListAdapter().getItem(position);
 		
 		Intent intent = new Intent(this, DataOfActivity.class);

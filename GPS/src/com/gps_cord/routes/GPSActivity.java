@@ -1,5 +1,6 @@
 package com.gps_cord.routes;
 
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -25,6 +26,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Chronometer;
 import android.widget.TextView;
@@ -52,6 +54,8 @@ public class GPSActivity extends ActionBarActivity {
 	double lat = 0;
 	double lng = 0;
 	
+	View background;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,7 @@ public class GPSActivity extends ActionBarActivity {
 		unitType = prefs.getString(SettingsActivity.units, "Kilometers");
 		vibDistance = prefs.getString(SettingsActivity.vibDist, "1.0");
 		
-		vibDist = Float.parseFloat(vibDistance);
+		vibDist = vibrateDistCalc(Float.parseFloat(vibDistance));
 		vibJump = vibDist; 
 		
 		chrono = (Chronometer) findViewById(R.id.chronometer1);
@@ -77,6 +81,12 @@ public class GPSActivity extends ActionBarActivity {
 		setTitle(activityTitle);
 		setIcon(activityTitle);
 		
+		
+		background = this.getWindow().getDecorView();
+		
+		if(activityTitle.equals("Drive"))	{
+			getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		}
 		
 		Log.d(tag, "Inne i onCreate()");
 		
@@ -109,10 +119,44 @@ public class GPSActivity extends ActionBarActivity {
 			
 			chrono.start();
 			
+			if (savedInstanceState == null) {
+				/*map.moveCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition(HIOF, 13, 0, 0)));
+				map.animateCamera(CameraUpdateFactory.newLatLng(FREDRIKSTAD), 2000, null);*/
+			}
+			else {
+				Bundle bundle = savedInstanceState.getBundle("lost_geodata");            
+	            ParcelLiveLocation pll = bundle.getParcelable("geodata");
+	            
+	            map.addPolyline(pll.getPolyLine());
+	            /*
+				map.addMarker(new MarkerOptions().position(kittenLocation.getLatLng()).title(kittenLocation.getName()).snippet("Found Kitten")
+						.icon(BitmapDescriptorFactory.fromResource(getResources().getIdentifier("kitten_0" + (kittyCounter % 3 + 1), "drawable", "com.capgemini.playingwithgooglemaps"))));*/
+			}
+			
+			
 		}
 		
 		
 		
+	}
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+	    outState.putLong("chrono", chrono.getBase());
+	    
+	    Bundle bundle = new Bundle();
+	    ParcelLiveLocation pll = new ParcelLiveLocation(rectLine);
+	    outState.putParcelable("geodata", pll);
+        outState.putBundle("lost_geodata", bundle);
+	    
+	    super.onSaveInstanceState(outState);
+	}
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState){
+	    if((savedInstanceState !=null)
+	            && savedInstanceState.containsKey("chrono")){
+	        chrono.setBase(savedInstanceState.getLong("chrono"));
+	    }
+	    super.onRestoreInstanceState(savedInstanceState);
 	}
 	
 	private void setIcon(String activityTitle) {
@@ -134,7 +178,7 @@ public class GPSActivity extends ActionBarActivity {
 		new AlertDialog.Builder(this)
         .setTitle("Stop activity?")
         .setMessage("Are you sure you want to stop this activity?")
-        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             	
         	@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -144,7 +188,7 @@ public class GPSActivity extends ActionBarActivity {
 		        
             }
          )
-        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) { 
                 // Do nothing
             }
@@ -155,6 +199,13 @@ public class GPSActivity extends ActionBarActivity {
 		}
 		
 
+	public void stopService(MenuItem menuitem) {
+		
+		Log.d(tag, "Stop Service knapp trykket");
+		stop();
+		
+	}
+	
 	public void stopService(View v) {
 		
 		Log.d(tag, "Stop Service knapp trykket");
@@ -165,6 +216,7 @@ public class GPSActivity extends ActionBarActivity {
 	private void stop()	{
 		if(runServiceIntent != null)	{
 			stopService(runServiceIntent);
+			
 			//unregisterReceiver(uiUpdated);
 			runServiceIntent = null;
 		
@@ -189,6 +241,7 @@ public class GPSActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.list, menu);
+        getMenuInflater().inflate(R.menu.stop, menu);
         return true;
     }
     public void showList(MenuItem menuitem) 	{
@@ -197,7 +250,7 @@ public class GPSActivity extends ActionBarActivity {
 	}
     
     public void vibrateAfterDistance(float distance)	{
-    	if(distance>vibrateDistCalc(vibDist))	{
+    	if(distance>vibDist)	{
     		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     		v.vibrate(1000);
     		Log.i(tag,"Vibrasjon etter "+distance);
@@ -207,11 +260,11 @@ public class GPSActivity extends ActionBarActivity {
     
     private float vibrateDistCalc(float vibDist)	{
     	if(unitType.equals("Kilometers"))	{
-			return (float) (Math.round(vibDist*100/1000)/100.00);
+			return (float) vibDist*1000;
 			
 		}
 		else if(unitType.equals("Miles"))	{
-			return (float) (Math.round(vibDist*100/1603.344)/100.00);
+			return (float) (vibDist*1609.344);
 		}
 		else
 			return 1000;
@@ -224,31 +277,42 @@ public class GPSActivity extends ActionBarActivity {
 			TextView t1 = (TextView) findViewById(R.id.textView_maxSpd);
             Float maxSpeed = intent.getExtras().getFloat("maxSpeed");
             if(unitType.equals("Kilometers"))	
-			t1.setText("Max Speed: "+ speedToString(maxSpeed) );
+			t1.setText(""+ speedToString(maxSpeed) );
             
             TextView t2 = (TextView) findViewById(R.id.textView_AvgSpd);
             Float avgSpeed = intent.getExtras().getFloat("avgSpeed");
-            t2.setText("Avg Speed: " + speedToString(avgSpeed) );
+            t2.setText("" + speedToString(avgSpeed) );
             
             TextView t3 = (TextView) findViewById(R.id.textView_Altitude);
             Double altitude = intent.getExtras().getDouble("altitude");
             
-            t3.setText( "Altitude: " + altToString(altitude) );
+            t3.setText( "" + altToString(altitude) );
             
             TextView t4 = (TextView) findViewById(R.id.textView_Speed);
             Double speed = intent.getExtras().getDouble("speed");
-            t4.setText( "Speed: "+ speedToString( speed.floatValue()) );
+            t4.setText( ""+ speedToSign( speed.floatValue()) );
+            
+            if(speed > (115/3.6))	{
+            	background.setBackgroundColor(Color.RED); 
+            }
+            else if(speed >(130/3.6))	{
+            	background.setBackgroundColor(Color.YELLOW);
+            }
+            else	{
+            	background.setBackgroundColor(Color.WHITE);
+            }
             
             TextView t5 = (TextView) findViewById(R.id.textView_Distance);
             
             distance = intent.getExtras().getFloat("distance");
             if (activityTitle.equals("Drive"))	{
-            	t5.setText("Distance: "+distanceToString(distance));
+            	t5.setText(""+distanceToString(distance));
             }
             else	{
-            	t5.setText("Distance: "+distanceToString(distance));
+            	t5.setText(""+distanceToString(distance));
             	vibrateAfterDistance(distance);
             }
+            
             
             /**
              * gets newest location from service and drawes a polyline on map
@@ -273,7 +337,7 @@ public class GPSActivity extends ActionBarActivity {
 				return dist + " km";
 			}
 			else if(unitType.equals("Miles"))	{
-				double dist = Math.round(distance*100/1603.344)/100.00;
+				double dist = Math.round(distance*100/1609.344)/100.00;
 				return dist + " mi"; 
 			}
 			else	
@@ -291,6 +355,19 @@ public class GPSActivity extends ActionBarActivity {
 			}
 			else	
 				return speed + " m/s";
+		}
+		
+		private String speedToSign(float speed)	{
+			if(unitType.equals("Kilometers"))	{
+				int spd = (int) Math.round(speed*3.6);
+				return spd+"";
+			}
+			else if(unitType.equals("Miles"))	{
+				int spd = (int) Math.round(speed*2.237);
+				return spd+""; 
+			}
+			else	
+				return speed+"";
 		}
 		
 		private String altToString(double alt)	{

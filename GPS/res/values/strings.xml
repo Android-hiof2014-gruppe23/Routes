@@ -16,8 +16,11 @@
     <string name="title_activity_data_of">DataOfActivity</string>
     <string name="title_activity_data_fragment">DataFragment</string>
     <string name="title_activity_map_fragment">MapFragment</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="settings_unit_select">Select your distance unit:</string>
     <string name="settings_vib_interval">Select your vibration interval:</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="stop">Stop</string>
 
 </resources>

@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/list"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         Routes:showAsAction="always"
         android:onClick="showList"
         android:title="@string/list"
