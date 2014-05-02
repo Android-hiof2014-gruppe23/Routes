@@ -292,10 +292,10 @@ public class GPSActivity extends ActionBarActivity {
             Double speed = intent.getExtras().getDouble("speed");
             t4.setText( ""+ speedToSign( speed.floatValue()) );
             
-            if(speed > (115/3.6))	{
+            if(speed > (130/3.6))	{
             	background.setBackgroundColor(Color.RED); 
             }
-            else if(speed >(130/3.6))	{
+            else if(speed >(115/3.6))	{
             	background.setBackgroundColor(Color.YELLOW);
             }
             else	{
